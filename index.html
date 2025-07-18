@@ -40,7 +40,37 @@
     <ul>
         <li><a href="test1.html">OCI Architect Associate 小テスト前半をスタート</a></li>
         <li><a href="test2.html">OCI Architect Associate 小テスト後半をスタート</a></li>
+        <li><a href="#" onclick="showRandomQuotes()">名言</a></li>
     </ul>
+
+    <script>
+        const quotes = [
+            "明日死ぬかのように生きよ。永遠に生きるかのように学べ。 - マハトマ・ガンディー",
+            "為せば成る、為さねば成らぬ何事も。成らぬは人の為さぬなりけり。 - 上杉鷹山",
+            "人生とは、今日一日を精一杯生きることから始まる。 - ヘレン・ケラー",
+            "成功の秘訣は、あきらめないことだ。 - アルベルト・アインシュタイン",
+            "失敗は成功の母。 - ことわざ",
+            "一歩一歩が成功への道。 - 孫正義",
+            "夢なき者に理想なし、理想なき者に計画なし、計画なき者に実行なし、実行なき者に成功なし。故に、夢なき者に成功なし。 - 吉田松陰"
+        ];
+
+        function showRandomQuotes() {
+            const selectedQuotes = [];
+            const tempQuotes = [...quotes]; // 元の配列をコピーして、選択済みの名言を削除できるようにする
+
+            for (let i = 0; i < 3; i++) {
+                if (tempQuotes.length === 0) {
+                    break;
+                }
+                const randomIndex = Math.floor(Math.random() * tempQuotes.length);
+                selectedQuotes.push(tempQuotes[randomIndex]);
+                tempQuotes.splice(randomIndex, 1); // 選択した名言を配列から削除する
+            }
+
+            const message = selectedQuotes.join("\n\n");
+            alert("今日の名言\n\n" + message);
+        }
+    </script>
 
 </body>
 </html>
