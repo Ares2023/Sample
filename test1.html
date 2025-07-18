@@ -270,7 +270,6 @@
             generateQuiz();
         }
 
-
         function generateQuiz() {
             const quiz = document.getElementById('quiz');
             quiz.innerHTML = '';
@@ -383,9 +382,11 @@
                 }
             });
 
+            const correctRate = Math.round((correctCount / totalQuestions) * 100);
+
             const passMark = Math.ceil(totalQuestions * 0.65);
             const scoreEl = document.getElementById('score');
-            scoreEl.innerHTML = `あなたのスコア: ${correctCount} / ${totalQuestions}問 正解`;
+            scoreEl.innerHTML = `あなたのスコア: ${correctCount} / ${totalQuestions}問 正解 (${correctRate}%)`;
 
             if (correctCount === totalQuestions) {
                 scoreEl.innerHTML += `<br><span class="result-pass">🎉 満点です！素晴らしい！</span>`;
