@@ -15,6 +15,13 @@
         h1 {
             color: #007acc;
         }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #007acc;
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
         ul {
             list-style-type: none;
             padding: 0;
@@ -35,12 +42,21 @@
 <body>
 
     <h1>世良のGitHub Pagesへようこそ！</h1>
-    <p>以下からテストを選択して：</p>
+    <p>以下から学習したい内容を選択してください：</p>
 
+    <h2>AWS 認定試験</h2>
+    <ul>
+        <li><a href="aws_clf_test.html">AWS認定クラウドプラクティショナー模擬試験をスタート</a></li>
+    </ul>
+
+    <h2>OCI 認定試験</h2>
     <ul>
         <li><a href="test1.html">OCI Architect Associate 小テスト前半をスタート</a></li>
         <li><a href="test2.html">OCI Architect Associate 小テスト後半をスタート</a></li>
-        <li><a href="aws_clf_test.html">AWS認定クラウドプラクティショナー模擬試験をスタート</a></li>
+    </ul>
+
+    <h2>その他</h2>
+    <ul>
         <li><a href="#" onclick="showRandomQuotes()">名言</a></li>
     </ul>
 
@@ -57,7 +73,7 @@
 
         function showRandomQuotes() {
             const selectedQuotes = [];
-            const tempQuotes = [...quotes]; // 元の配列をコピーして、選択済みの名言を削除できるようにする
+            const tempQuotes = [...quotes]; 
 
             for (let i = 0; i < 3; i++) {
                 if (tempQuotes.length === 0) {
@@ -65,7 +81,7 @@
                 }
                 const randomIndex = Math.floor(Math.random() * tempQuotes.length);
                 selectedQuotes.push(tempQuotes[randomIndex]);
-                tempQuotes.splice(randomIndex, 1); // 選択した名言を配列から削除する
+                tempQuotes.splice(randomIndex, 1);
             }
 
             const message = selectedQuotes.join("\n\n");
