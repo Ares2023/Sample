@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AWS認定クラウドプラクティショナー模擬試験</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 1em;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .summary {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        .explanation {
+            display: none;
+            padding-top: 10px;
+            border-top: 1px dashed #eee;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .explanation.visible {
+            display: block;
+        }
+
+        .question-header {
+            margin-bottom: 10px;
+        }
+
+        .question-options label {
+            display: block;
+            margin-bottom: 5px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .question-options input[type="radio"],
+        .question-options input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        label.correct-choice {
+            background-color: #e0ffe0;
+            border: 1px solid green;
+        }
+
+        label.incorrect-choice {
+            background-color: #ffe0e0;
+            border: 1px solid red;
+        }
+
+
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .toggle-explanation-btn {
+            background-color: #6c757d;
+            padding: 5px 12px;
+            font-size: 0.8em;
+            margin-top: 10px;
+        }
+
+        .toggle-explanation-btn:hover {
+            background-color: #5a6268;
+        }
+
+        .result-pass {
+            color: green;
+        }
+
+        .result-fail {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>AWS認定クラウドプラクティショナー模擬試験</h1>
+    <h3>※問題及び解説は提供されたPDFの内容に準拠しています。</h3>
+    <p></p>
+
+    <div id="quiz"></div>
+
+    <button onclick="shuffleAndRegenerate()">問題をシャッフル</button>
+    <button onclick="grade()">採点する</button>
+    <button onclick="showAllAnswers()">すべての解説を表示</button>
+    <button onclick="clearAllHighlights()">ハイライトを消去</button>
+
+
+    <h2 id="score" class="summary"></h2>
+
+    <script>
+        const questions = [
+            { q: "1. AWS クラウド導入フレームワーク (AWS CAF) のクラウドトランスフォーメーションジャーニーで推奨されるオプションはどれですか。 2つ選んでください。", options: ["構想フェーズ", "連携フェーズ", "コストフェーズ", "人員フェーズ", "移行および最新化フェーズ"], correct: ["a", "b"], explanation: "正解: A・B<br>本文参照:「AWS クラウド導入フレームワーク (AWS CAF)、④クラウドトランスフォーメーションジャーニー」(p.293)<br>AとBが正解です。AWSクラウド導入フレームワーク (AWS CAF)は、 企業や組織が、クラウドへの移行の準備や対応の状況について、分析および 評価するためのフレームワークです。AWS CAFのクラウドトランスフォー メーションジャーニーでは、クラウドを導入する段階を4つのフェーズに 分け、「構想フェーズ」 「連携フェーズ」 「起動フェーズ」 「スケールフェーズ」 と定義しています。<br>CとDとEは間違いです。いずれも、AWS CAFのクラウドトランス フォーメーションジャーニーに定義されていません。" },
+            { q: "2. 金融関連サービスを展開するある企業は、基幹システムをAWS へ移 行することを検討しています。同社は、AWS へ移行するための準備 状況を評価するため、ビジネス変革の機会を特定し、優先順位付けす る予定です。これらの要件を満たすために企業はどのAWS サービス またはツールを使用する必要がありますか。", options: ["AWS クラウド導入フレームワーク (AWS CAF)", "AWS Managed Services (AMS)", "AWS Well-Architected Tool", "AWS Control Tower"], correct: "a", explanation: "正解: A<br>本文参照:「AWS クラウド導入フレームワーク (AWS CAF)」 (p.289)<br>Aが正解です。AWS クラウド導入フレームワーク (AWS CAF)は、企 業や組織が、クラウドへの移行の準備や対応の状況について、分析および評 価するためのフレームワークです。<br>Bは間違いです。AWS Managed Servicesは、AWSインフラストラク チャの運用管理代行サービスです。<br>Cは間違いです。AWS Well-Architected Toolは、AWS Well- Architected Frameworkへの準拠状況をレビューできるサービスです。 AWS Well-Architected フレームワークは、AWS設計・構築のベストプ ラクティス集です。<br>Dは間違いです。AWS Control Tower は、AWS上にセキュアなラン ディングゾーンを構築できるサービスです。" },
+            { q: "3. ファイル転送ツールの開発・販売を行うある企業は、販売状況の管理 を行うために、質問を行うと関連する回答を生成AIで視覚化するよ うな仕組みを、ビジネスインテリジェンス (BI) ダッシュボードに統 合することを計画しています。これらの要件を満たす AWSのサービ スまたはツールはどれですか。", options: ["Amazon Macie", "Amazon Rekognition", "Amazon Q in QuickSight", "Amazon Polly"], correct: "c", explanation: "正解: C<br>本文参照:「Amazon QuickSight Q」 (p.248)<br>Cが正解です。Amazon Q in QuickSight は、Amazon QuickSight に おいて、生成AIを使用し、ビジュアルの作成、計算の構築、およびビジュ アルの改良を行う Generative Business Intelligence (BI) の機能です。<br>Aは間違いです。Amazon Macieは、Amazon S3 内の機密データの検 出を行い、データセキュリティリスクの可視化を行うサービスです。<br>Bは間違いです。Amazon Rekognition は深層学習に基づいた、フルマ ネージド型の画像・動画分析サービスです。<br>Dは間違いです。Amazon Polly はテキストデータから自然な音声を生 成するサービスです。" },
+            { q: "4. あるロジスティック企業はシステムをAWS上で運用しており、シス テムを疎結合化するための仕組みを必要としています。この要件を満 たす AWS サービスはどれですか。2つ選んでください。", options: ["Amazon Workspaces", "Amazon Simple Queue Service (Amazon SQS)", "Amazon Direct Connect", "AWS Trusted Advisor", "AWS Step Functions"], correct: ["b", "e"], explanation: "正解: B・E<br>本文参照:「Amazon Simple Queue Service (Amazon SQS)」 (p.250)<br>BとEが正解です。Amazon Simple Queue Service(以下、Amazon SQS)は、フルマネージドのメッセージキューサービスです。Amazon SQSにより、サービス間で非同期通信を行うことができるようになるため、 サービス同士を疎結合化し、サービス全体の耐障害性を向上させることがで きます。AWS Step Functions は、AWSの各種サービスを連携させ、一 連のワークフローを視覚的に構築できるサービスです。分岐処理、繰り返し 処理、エラー処理、ユーザオペレーションの介入、並列処理などを組み合わ せることにより、オンプレミスで構築されているジョブ管理システムなどを AWS クラウド上にサーバレス、かつ疎結合で、構築することができるよう になります。<br>Aは間違いです。Amazon WorkSpaces は、AWS が提供するフルマネー ジド型でセキュアな仮想デスクトップサービスです。<br>Cは間違いです。Amazon Direct Connect はオンプレミスとAWSの 間で専用線を用いた接続を可能にするサービスです。<br>Dは間違いです。AWS Trusted Advisor は、AWS環境がベストプラク ティスに沿ったものか評価し、ベストプラクティスとの乖離があった場合に ガイダンスを提供するサービスです。" },
+            { q: "5. デジタルマーケティング事業を展開するある企業は、Amazon EC2 インスタンスでシステムを運用しています。同社は、EC2インスタ ンスを同じ地理的エリアに配置しながら、冗長的な基盤となる電源を 使用したいと考えています。これらの要件を満たすソリューションは どれですか。", options: ["同じAWS リージョン内の複数のアベイラビリティゾーンにわたって EC2 インスタンスを使用します。", "Amazon CloudFront を EC2 インスタンスのデータベースとして使用 します。", "同じエッジロケーションと同じアベイラビリティゾーンでEC2 インス タンスを使用します。", "異なるデータセンタに配置した AWS OutpostsでEC2 インスタンス を使用します。"], correct: "a", explanation: "正解: A<br>本文参照:「リージョン」 (p.33)<br>Aが正解です。AWS リージョンとは、複数のアベイラビリティゾーンを 国や地域でまとめたものです。各アベイラビリティゾーンには、個別の電力 源、冷却システム、そして物理的セキュリティが備わっています。そのため、 複数のアベイラビリティゾーンを利用することにより、1つのデータセンタ だけでは実現が難しい高可用性、耐障害性を備えたアプリケーションの構成 ができます。<br>Bは間違いです。Amazon CloudFrontは、コンテンツデリバリネットワー ク (CDN)のサービスです。CloudFrontを使用すると、特定リージョン にあるコンテンツ (動画ファイル等)のキャッシュをエッジロケーションに 配置することができますが、EC2 インスタンスのデータベースとして使用 することはできません。<br>Cは間違いです。エッジロケーションは、世界に600か所以上存在し、 地理的に分散して配置された小型のデータセンタです。エッジロケーション では Amazon CloudFront や AWS WAFなど、AWSの一部のサービス が提供されています。Amazon EC2 Amazon EBS、Amazon RDS といっ たサービスは、提供されていません。<br>Dは間違いです。AWS Outposts はオンプレミスのサーバルームやデー タセンタでAWSのハードウェアを稼働できるサービスです。Outposts上 では EC2 インスタンスなどのサービスを使用できますが、同じ地理的エリ アを共有するという要件には対応しません。" },
+            { q: "6. ある IoT プラットフォームを提供する企業は、Web アプリケーショ ンを運用しています。同社の運用チームは、レイテンシを最小限に抑 え、アプリケーションのコンテンツをできるだけエンドユーザに近い ところで提供したいと考えています。この機能を提供する AWS の サービスまたはインフラストラクチャコンポーネントはどれですか。", options: ["AWS リージョン", "アベイラビリティゾーン", "エッジロケーション", "AWS Direct Connect"], correct: "c", explanation: "正解: C<br>本文参照:「エッジロケーション」 (p.34)<br>Cが正解です。エッジロケーションとは、世界に600か所以上存在し、 地理的に分散して配置された小型のデータセンタです。エッジロケーション 上で動作する Amazon CloudFront を利用することにより、Webアプリ ケーションのコンテンツなどを Amazon CloudFront でキャッシュし、ユー ザに対して低レイテンシでコンテンツを配信することができます。<br>Aは間違いです。AWS リージョンとは、複数のアベイラビリティゾーン を国や地域でまとめたものです。リージョンは世界に30か所以上あり、追 加契約なしに、使用することができます。AWS リージョンは、エッジロケー ションと比較すると、ユーザとの距離が遠くなることが多いため、レイテン シを最小限に抑えられるとは言えません。<br>Bは間違いです。アベイラビリティゾーンとは、1つ以上のデータセンタ の集まりです。アベイラビリティゾーンは、リージョン内に存在するため、 エッジロケーションと比較すると、ユーザとの距離が遠くなることが多いた め、レイテンシを最小限に抑えられるとは言えません。<br>Dは間違いです。AWS Direct Connect は、オンプレミスデータセンタ とVPC間の専用接続を提供するためのサービスです。そのため、特定のユー ザとリージョンの間において、AWS Direct Connect を使用することによ り、ネットワークの安定性などは増しますが、通信距離は基本的に変わらな いため、レイテンシの大幅な改善にはつながりません。" },
+            { q: "7. 決済関連サービスを提供するある企業は、ワークロードの変化に合わ せて、Amazon EC2 インスタンスを動的に対応させ、かつ自動的に 追加・削除を行いたいと考えています。これらの要件を満たすサービ スまたは機能はどれでしょうか。", options: ["Amazon DynamoDB", "Amazon EC2 リザーブドインスタンス", "AWS Snow Family", "Amazon EC2 Auto Scaling"], correct: "d", explanation: "正解: D<br>本文参照:「AWS Auto Scaling」(p.172)<br>Dが正解です。AWS Auto Scalingは、リソース需要等に応じて自動的 にAWS リソースを増減させることができるサービスです。特に、EC2 イ ンスタンスの増減を制御する Auto Scaling のことを、EC2 Auto Scaling と呼びます。<br>Aは間違いです。Amazon DynamoDB (DynamoDB)は、キーバリュー 型およびドキュメント型をサポートする NoSQL データベースです。また、 サーバレスであり、フルマネージドのサービスです。<br>Bは間違いです。リザーブドインスタンスは、EC2 インスタンスを1年 もしくは3年単位で長期契約することで割引を利用できる購入オプション です。<br>Cは間違いです。AWS Snow Familyは、物理アプライアンスを用いて、 ローカル環境に存在する大量のデータを、Amazon S3 バケットヘオフライ ン移行するためのサービスです。" },
+            { q: "8. ある金融サービス企業は、セキュリティポリシーに基づいて、Amazon EBS ボリュームを暗号する必要があります。暗号化には、どのAWS サービスが使用されますか。", options: ["AWS Certificate Manager", "Amazon Inspector", "AWS Key Management Service (AWS KMS)", "Amazon CloudFront"], correct: "c", explanation: "正解: C<br>本文参照:「AWS Key Management Service (AWS KMS)」(p.212)<br>Cが正解です。AWS Key Management Service (以下KMS)は、デー タの暗号化に使用する暗号化キーの生成や管理を行えるサービスです。 AWS KMSで生成した暗号化キーを使用して、Amazon S3や、Amazon EBS をはじめとしたストレージサービスのデータや Amazon RDS をはじ めとしたデータベースサービスのデータ等を暗号化することができます。<br>Aは間違いです。AWS Certificate Managerは、SSL/TLSサーバ証明書の発行と管理、配信を行うため のサービスです。例えば、ACMで生成した証明書をELBに配信し、自動 更新を行うことができます。<br>Bは間違いです。Amazon Inspectorは、AWS リソースの脆弱性やセキュ リティ問題を自動検出するサービスです。<br>Dは間違いです。Amazon CloudFront は、コンテンツデリバリネットワー ク (CDN) を提供するサービスです。" },
+            { q: "9. ある企業がAWS クラウドへの移行を検討しています。同社がAWS クラウドを利用して設計を行う時に考慮するべき設計原則はどれで すか。", options: ["サーバは使い捨てではないリソースと考えます。", "同期処理により、サービスを統合します。", "疎結合コンポーネントを設計します。", "ネットワーク ACLに対して、すべてのリソースからのアクセスを許可 します。"], correct: "c", explanation: "正解: C<br>本文参照:「AWS Well-Architected フレームワーク」 (p.294)、「運用上の優秀性」(p.295)<br>Cが正解です。AWSの設計・構築におけるベストプラクティス集として AWS Well-Architected フレームワークがあり、その「運用上の優秀性」 の柱の設計原則に、「小規模かつ可逆的な変更を頻繁に行う」とあります。 この設計原則は、コンポーネントを定期的に更新できるように、スケーラブ ルかつ疎結合なワークロードとして設計することにより、デプロイの自動化 の手法と併せて、小さく段階的に変更していくことが可能となり、障害が発 生した場合でも影響範囲を小さく抑え、迅速に復旧することができます。<br>Aは間違いです。AWS クラウドでは、可能な限りサーバのローカルに保 存されたデータに依存しないようにし、サーバはいつでも廃棄できるように しておくことが推奨されています。サーバはいつでも廃棄できるをステート レスと言います。サーバをステートレスにすることにより、可用性に影響を 与えずにサーバをいつでも交換できるようになります。<br>Bは間違いです。AWSクラウドでは、サービスやジョブなどを非同期に することが推奨されています。サービスやジョブなどを非同期にすることに より、サービスやジョブ同士の依存関係が排除され、疎結合化が促進します。 疎結合化により、各コンポーネントでの拡張性、保守性が向上します。<br>Dは間違いです。AWS クラウドでは、セキュリティの観点から、多層防 御の考え方に則り、複数のセキュリティサービスでアクセスを制限すること が推奨されています。" },
+            { q: "10. ある教育機関の運営企業は、セキュリティグループの設定ミスを監視 したいと考えています。特に特定のポートへの無制限のアクセス許可 についてです。また、アクセスを信頼できるソースにのみ制限するこ とで、セキュリティグループにおけるシステムの可用性、完全性、機 密性に関連した攻撃から保護しなければいけません。これらの要件を 満たすサービスはどれでしょうか。", options: ["AWS Trusted Advisor", "AWS CloudTrail", "Amazon GuardDuty", "AWS サポート"], correct: "a", explanation: "正解: A<br>本文参照:「AWS Trusted Advisor」 (p.171)<br>Aが正解です。AWS Trusted Advisor (以下、Trusted Advisor)は、 AWS 環境がベストプラクティスに沿ったものか評価し、ベストプラクティ スとの乖離があった場合にガイダンスを提供するサービスです。Trusted Advisor のセキュリティのカテゴリで、特定のポートへの無制限アクセス (0.0.0.0/0) があるかをチェックします。<br>Bは間違いです。AWS CloudTrail は、AWSに対するAPI リクエスト の監査ログを取得するサービスです。<br>Cは間違いです。Amazon GuardDuty は、セキュリティ上の脅威が発 生していないかという観点で、AWSアカウントやネットワーク通信を監視 する脅威検出のサービスです。<br>Dは間違いです。AWSサポートは、技術支援や運用支援を提供するサポー トサービスです。" },
+            { q: "11. ある船舶用機器の総合メーカーは、AWSクラウドの利用を検討して います。同社は、インターネット接続が制限され、隔離された地域に 拠点を置いています。そのため、同社は、オンプレミスでデータ処理 を行う必要があります。同社には、安定したインターネット接続がな くても動作できるソリューションが必要です。これらの要件を満たす AWS サービスはどれですか。", options: ["Amazon S3", "AWS Snowball Edge", "AWS Outposts", "AWS Ground Station"], correct: "b", explanation: "正解: B<br>本文参照:「AWS Snow Family」 (p.257)<br>Bが正解です。AWS Snowball Edgeは、物理アプライアンスを用いて、 ローカル環境に存在する大量のデータを、Amazon S3 バケットヘオフライ ン移行するためのサービスです。また、データを収集および処理するための コンピューティングリソースを持つため、ネットワークと繋がらない場所で のデータ収集や、エッジコンピューティングのために使用することもできま す。<br>Aは間違いです。Amazon S3とは、高い耐久性を備えたオブジェクトス トレージのサービスです。<br>Cは間違いです。AWS Outposts を使用するためには、Outposts の管 理のためにインターネット接続が必要です。<br>Dは間違いです。AWS Ground Station は人工衛星と直接通信し、デー タをAWS上で処理・保存・配信できるサービスです。" },
+            { q: "12. スーパーマーケットを展開するある企業が、AWSを利用しています。 同社は毎月 AWS サービスに支出する金額に上限があります。そのた め、同社は、支出制限に達した際に、アラートを受け取りたいと考え ています。これらの要件を満たすために会社はどのAWS サービスま たはツールを使用する必要がありますか。", options: ["AWS Cost Explorer", "Amazon GuardDuty", "AWS Shield", "AWS Budgets"], correct: "d", explanation: "正解: D<br>本文参照:「AWS Budgets」 (p.237)<br>Dが正解です。AWS Budgetsは、コストと使用状況をモニタリングし、 アラートに設定した金額や使用状況に近づいたり超えたりした時に、通知お よびアクションを実行することができるサービスです。<br>Aは間違いです。AWS Cost Explorerは、コストと使用状況を表示し、 さまざまな角度からコストを分析し、レポートを作成することができるツー ルです。<br>Bは間違いです。Amazon GuardDuty は機械学習を用いてAWS 環境 に対する脅威を分析・通知するサービスです。<br>Cは間違いです。AWS Shield はDDoS攻撃を緩和するサービスです。" },
+            { q: "13. DDoS 攻撃から AWSのリソースを保護できる AWS サービスはどれ ですか。", options: ["AWS Firewall Manager", "AWS Shield Standard", "AWS WAF", "AWS License Manager"], correct: "b", explanation: "正解: B<br>本文参照:「AWS Shield」 (p.210)<br>Bが正解です。AWS Shieldは、AWS リソースへのDDoS攻撃を防御 するためのサービスです。AWS Shield Standard は、すべてのAWS ユー ザが無料で使用することのできる AWS Shieldのオプションです。すべて のインターネットに面したAWS リソースに対して、一般的なDDoS攻擊 への防御を提供します。<br>Aは間違いです。AWS Firewall Manager は、AWSのさまざまなファ イアウォール関連サービスを一元管理するサービスです。例えば、AWS WAFAWS Network Firewall、セキュリティグループ等の設定を、複 数アカウントに対して一元管理できます。<br>Cは間違いです。AWS WAFは、AWS上のアプリケーションに対する HTTP/HTTPS通信の内容を検査し、不正な通信をブロックするためのサー ビスです。<br>Dは間違いです。AWS License Managerは、ソフトウェアライセンス をAWS内外で一元的に追跡・管理し、ライセンスの管理を支援するサー ビスです。" },
+            { q: "14. 自社製のファッション雑貨をECサイトで販売するある企業は AWS Control Tower を使用しています。同社は新規の AWS Control Tower ランディングゾーンに、コントロール(ガードレール) を実装 することを計画しています。コントロールを作成および定義するため に使用できる AWSのサービスまたは機能はどれですか。2つ選んで ください。", options: ["AWS Config", "サービスコントロールポリシー (SCP)", "Amazon GuardDuty", "AWS Identity and Access Management (IAM)", "ネットワーク ACL"], correct: ["a", "b"], explanation: "正解: A・B<br>本文参照:「AWS Control Tower」 (p.179)<br>AとBが正解です。AWS Control Tower は、ベストプラクティスに準 拠したマルチアカウント環境をデプロイするためのサービスです。このマル チアカウント環境のことをランディングゾーンと呼びます。ランディング ゾーンのガバナンスの制御等を行うために、コントロール (もしくはガード レール)と呼ばれる各種セキュリティルールが設定されています。コントロー ルは、AWS Config OrganizationsのSCP等によって構成されています。 サービスコントロールポリシー (SCP)は、AWS Organizations で作成 できるセキュリティポリシーです。このポリシーはOU (組織単位)や AWSアカウント単位でアタッチでき、環境全体で一貫して実施させたくな い操作等を定義するのに適しています。<br>Cは間違いです。Amazon GuardDutyは、セキュリティ上の脅威が発 生していないかという観点で、AWSアカウントやネットワーク通信を監視 する脅威検出のサービスです。<br>Dは間違いです。AWS Identity and Access Management (以下、 IAM)は、AWSのサービスやリソースに対する認証と認可を制御するサー ビスです。そのため、マルチアカウント環境であるランディングゾーンを制 御するためのサービスではありません。<br>Eは間違いです。ネットワーク ACLは、VPCのサブネット単位で動作 するファイアウォールの機能です。" },
+            { q: "15. ある企業は、時間経過に伴う AWSの支出と使用状況を視覚化し、確 認・管理を行いたいと考えています。使用できる AWS サービスはど れですか。", options: ["AWS Organizations", "AWS 料金計算ツール", "AWS Cost Explorer", "AWS Config"], correct: "c", explanation: "正解: C<br>本文参照:「AWS Cost Explorer」 (p.239)<br>Cが正解です。AWS Cost Explorerは、時間の経過に伴うコストと使用 状況を表示し、さまざまな角度からコストを分析し、レポートを作成するこ とができるツールです。<br>Aは間違いです。AWS Organizationsは、AWSのマルチアカウント環 境を管理するためのサービスです。<br>Bは間違いです。AWS料金計算ツール (AWS Pricing Calculator)は 無料で利用できる Webベースの料金計算ツールです。<br>Dは間違いです。AWS Configは、AWS リソースの構成変更を記録・ 評価・監査できるサービスです。" },
+            { q: "16. ある物流企業は、Amazon EC2 インスタンスでアプリケーションを 運用しています。同社は脆弱性のあるアプリケーションと、ベストプ ラクティスを満たしていないインフラストラクチャを特定する必要 があります。この会社がこれらの要件を満たすために使用できる AWS サービスはどれですか。", options: ["Amazon CloudWatch", "Amazon Inspector", "AWS Compute Optimizer", "Amazon GuardDuty"], correct: "b", explanation: "正解: B<br>本文参照:「Amazon Inspector」 (p.208)<br>Bが正解です。Amazon Inspectorは、ソフトウェアの脆弱性がないか という観点でAWS上のリソースをスキャンする脆弱性検出のサービスで す。具体的には、EC2 インスタンスや Amazon ECRのコンテナイメージ、 Lambda 関数のスキャンとソフトウェア脆弱性の検出が行えます。<br>Aは間違いです。AWS CloudWatch は、AWS上のリソースやアプリケー ションのログ・メトリクスを収集・可視化できる監視のサービスです。<br>Cは間違いです。AWS Compute Optimizer は、EC2やEBS、Lambda などの使用状況を分析して最適なインスタンスタイプなどを提案するサービ スです。<br>Dは間違いです。Amazon GuardDutyは、セキュリティ上の脅威が発 生していないかという観点で、AWSアカウントやネットワーク通信を監視 する脅威検出のサービスです。" },
+            { q: "17. ある米菓メーカーは、コンポーネントの一部に障害が発生しても、 AWS ワークロードが動作するように設計したいと考えています。 AWSのベストプラクティスは何ですか。", options: ["四半期ごとに災害復旧テストを実行します。", "メインのコンポーネントをap-northeast-1 リージョンに配置します。", "正常なリソースへの自動フェイルオーバを設計します。", "単一のアベイラビリティゾーンに収まるようにワークロードを設計しま す。"], correct: "c", explanation: "正解: C<br>本文参照:「AWS Well-Architected フレームワーク」(p.294)、「信頼性」(p.296)<br>Cが正解です。AWSでのワークロードを設計する場合、コンポーネント に障害が発生した場合であっても、正常なリソースへの自動フェイルオー パーを設計することがAWSのベストプラクティスです。その点については、 AWS Well-Architected フレームワークの信頼性の柱の設計原則「障害か ら自動的に復旧する」に含まれます。<br>Aは間違いです。四半期ごとに災害復旧テストを実行することにより、実 際の障害シナリオが発生する前にテストおよび修正できる障害経路が確認で き、リスクを軽減することができます。しかし、障害復旧テストを行ったと しても、コンポーネント障害が発生した際にAWS ワークロードが動作し 続ける保証はありません。<br>Bは間違いです。メインのコンポーネントをap-northeast-1 リージョン に配置したとしても、コンポーネント障害が発生した際、AWS ワークロー ドが動作するわけではありません。<br>Dは間違いです。単一のAZに収まるように設計すると、AZで故障が発 生した際にワークロードが停止する可能性があります。" },
+            { q: "18. いつでも無料で使用できる AWS サービスはどれですか。", options: ["AWS Shield Advanced", "Amazon Aurora", "Amazon RDS", "AWS Identity and Access Management (IAM)"], correct: "d", explanation: "正解: D<br>本文参照:「AWS Identity and Access Management (IAM)」 (p.202)<br>Dが正解です。AWS Identity and Access Management は、AWSの サービスやリソースに対する認証と認可を制御するサービスです。基本的な 機能はすべて無料で使うことができます。<br>Aは間違いです。AWS Shield Advancedは、有料のサブスクリプショ ン契約が必要なサービスです。<br>Bは間違いです。Amazon Aurora はAmazon RDSのデータベースエ ンジンの1つとして提供されています。Amazon Aurora 利用時、DBイン スタンスの使用時間ごとにデータベースの料金を支払う必要があります。<br>Cは間違いです。Amazon RDSはDBインスタンスの使用時間ごとにデー タベースの料金を支払う必要があります。" },
+            { q: "19. ある家電製品メーカーは、準拠したOSのパッチが、すべてのAmazon EC2 インスタンスに適用されていることを確認する必要があります。 これらの要件を満たす AWS サービスはどれですか。", options: ["AWS Compute Optimizer", "AWS Lambda", "AWS AppSync", "AWS Systems Manager"], correct: "d", explanation: "正解: D<br>本文参照:「AWS Systems Manager」 (p.213)<br>Dが正解です。AWS Systems Manager は、AWS リソースに対する運 用管理を自動化できるサービスです。具体的には、EC2 インスタンスに対 してパッチが適用されていることの確認や、パッチの適用を自動化できたり、 EBS スナップショットの作成を自動化できたりします。<br>Aは間違いです。AWS Compute Optimizer は AWS リソースの性能値 をもとに、最適なリソース量やスペックを調査できるサービスです。<br>Bは間違いです。AWS Lambdaは、サーバを管理せずにコードを実行 できるサービスです。<br>Cは間違いです。AWS AppSyncは、Web API を開発するためのクエ リ言語である GraphQLを活用し、複数のデータソースを統合し安全にア クセス・操作できる AWSのサーバレス型マネージドサービスです。" },
+            { q: "20. AWS 責任共有モデルにおいて、責任が、AWS側にある作業はどれで すか。2つ選んでください。", options: ["AWS ネットワークデバイスにパッチを適用します。", "ゲストオペレーティングシステムを管理します。", "コンピューティングリソースに物理的なセキュリティを提供します。", "セキュリティグループを構成します。", "アプリケーションアクセスとデータをセキュア化します。"], correct: ["a", "c"], explanation: "正解: A・C<br>本文参照:「責任共有モデル」、「AWSの責任範囲」(ともにp.299)<br>AとCが正解です。AWSは、AWSクラウドで提供されるすべてのサー ビスを実行するインフラストラクチャの保護について責任を負います。この インフラストラクチャはハードウェア、ソフトウェア、ネットワーキング、 AWSのサービスを実行する施設で構成されます。<br>BとDとEは間違いです。ユーザはAWS クラウドを利用する際のユー ザのデータや、認証・認可の設定、暗号化の設定、ファイアウォールの設定 などについて責任を負います。そのため、Amazon EC2 インスタンスのオ ペレーティングシステムのパッチ適用、アプリケーションへのアクセス制御 や保管中のデータの保護は、ユーザの責任となります。" },
+            { q: "21. ある企業は、Amazon EC2 インスタンス上で複数のEコマースアプ リケーションを実行しています。各アプリケーションを相互にメッ セージを送受信できるようにする必要があります。この要件を満たす AWS サービスはどれですか。", options: ["AWS Auto Scaling", "AWS Lambda", "Amazon Simple Queue Service (Amazon SQS)", "AWS Application Migration Service"], correct: "c", explanation: "正解: C<br>本文参照:「Amazon Simple Queue Service (SQS)」(p.250)<br>Cが正解です。Amazon Simple Queue Service(以下、Amazon SQS)は、フルマネージドのメッセージキューサービスです。Amazon SQS を使用すると、メッセージを送信、保存、受信できます。<br>Aは間違いです。AWS Auto Scalingは、リソース需要等に応じて自動 的にAWS リソースを増減させることができるサービスです。<br>Bは間違いです。AWS Lambdaは、サーバを管理せずにコードを実行 できるサービスです。<br>Dは間違いです。AWS Application Migration Serviceは、オンプレミ スや他クラウド上のサーバを最小限のダウンタイムでAWSに移行できる サービスです。" },
+            { q: "22. ルートユーザの認証情報を使用する必要があるタスクはどれですか。", options: ["AWSの本番リソースに変更を加えます。", "ルートユーザーのアクセスキーを更新します。", "AWSのコストと使用状況レポートにアクセスします。", "コンプライアンス監査のために監査人にAWS アカウントへのアクセ スを許可します。"], correct: "b", explanation: "正解: B<br>本文参照:「ルートユーザ (root ユーザ)」 (p.202)<br>Bが正解です。ルートユーザのアクセスキーを更新する際には、ルート (root) ユーザとしてAWSアカウントにサインインする必要があります。<br>AとCとDは間違いです。本番環境のリソースに変更を加えるには、適 切なポリシーやロールを使用することにより行えます。そのため、ルートユー ザの認証権限を必要としません。" },
+            { q: "23. IoT プラットフォームを展開するある企業は、AWS クラウドを使用 するにあたり、専任の担当者を必要としています。AWS サポートプ ランの中で、AWS テクニカルアカウントマネージャ (TAM) へのア クセスを提供するサポートプランはどれですか?", options: ["AWS ベーシックサポート", "AWS 開発者サポート", "AWS ビジネスサポート", "AWS エンタープライズサポート"], correct: "d", explanation: "正解: D<br>本文参照:「AWS サポートプラン」 (p.312)<br>Dが正解です。エンタープライズサポートに加入することにより、担当の テクニカルアカウントマネージャ(TAM)が、ユーザのアプリケーション やユースケースに応じたアーキテクチャや運用のガイダンスを提供します。<br>AとBとCは間違いです。ベーシック、開発者、ビジネスの各サポート プランには、テクニカルアカウントマネージャは提供されません。" },
+            { q: "24. ある人材システムの開発企業は、昨日ある Amazon EC2 インスタン スが削除されていることに気が付きました。誰が、いつEC2 インス タンスを削除したかを特定するために、同社はどのAWS サービスを 使用できますか。", options: ["AWS Systems Manager", "AWS Trusted Advisor", "AWS CloudTrail", "AWS Lambda"], correct: "c", explanation: "正解: C<br>本文参照:「AWS CloudTrail」 (p.168)<br>Cが正解です。AWS CloudTrail は、AWSアカウントで行われた操作(ア クティビティ)の記録を保存し、監査等に使用することができるサービスで す。AWS CloudTrail に保存される操作の記録は、追加設定を行わない場合、 90日間保持されます。<br>Aは間違いです。AWS Systems Managerは、サーバーの運用管理を一 元化できるサービスです。<br>Bは間違いです。AWS Trusted Advisor は、AWS環境がベストプラク ティスに沿ったものか評価し、ベストプラクティスとの乖離があった場合に ガイダンスを提供するサービスです。<br>Dは間違いです。AWS Lambdaは、サーバを管理せずにコードを実行 できるサービスです。" },
+            { q: "25. ある金融サービス企業は、オンプレミスのデータベースをAWS クラ ウドへ移行することを検討しています。同社は、簡素化された移行プ ロセスにより、マネージドクラウドデータベースへ移行することを必 要としています。この要件を満たすのに役立つ AWS のサービスまた はツールはどれですか。", options: ["Amazon API Gateway", "AWS Application Migration Service", "AWS DataSync", "AWS Database Migration Service (AWS DMS)"], correct: "d", explanation: "正解: D<br>本文参照:「表 9.20.6: その他の「移行と転送」 カテゴリのAWS サービス」の「AWS Database Migration Service (DMS)」(p.257)<br>Dが正解です。AWS DMSはリレーショナルデータベース、NoSQL デー タベースまたはその他のタイプのデータストアを移行するためのサービスで す。AWS DMSにより、ソースデータストアの検出、ソーススキーマの変換、 データの移行を行うことができます。<br>Aは間違いです。Amazon API Gateway は、APIの作成・公開・管理 を行うサービスです。<br>Bは間違いです。AWS Application Migration Serviceは、物理、仮想、 またはクラウドのソースサーバをインフラストラクチャからAWS上でネ イティブに実行するように自動的に変換することにより、AWSへの移行を 簡素化および迅速化することのできるサービスです。<br>Cは間違いです。AWS DataSyncは、オンプレミスのストレージから Amazon EFS、Amazon FSx、Amazon S3ヘファイルを同期するための、 あるいは AWS ストレージ間でファイルを同期するためのサービスとなり ます。" },
+            { q: "26. 数十万のユーザの使用状況を集約することで、AWSの従量課金制の 料金設定は低く抑えられています。これは、AWS クラウドのどの利 点を表していますか。", options: ["固定費を変動費に転換", "スピードと俊敏性の向上", "大規模なスケールメリット", "コンピューティングキャパシティについて予測する必要がない"], correct: "c", explanation: "正解: C<br>本文参照:「AWS クラウドのメリット」の「③スケールメリット」 (p.288)<br>Cが正解です。大規模なスケールメリットは、世界中のユーザのリソース をクラウドに集約させることができるため、クラウドサービスプロバイダは 規模の経済性を高め、調達コストをおさえることができます。調達コストが 下がった分は、ユーザに対して値下げとして還元されます。<br>Aは間違いです。固定費を変動費に転換できるメリットは、柔軟な導入計 画の策定やシステム構成の変更を可能にします。<br>Bは間違いです。従来、サーバなどの機器調達に数週間から数カ月かかっ ていましたが、クラウドでは数分程度で調達できます。そのため、ビジネス のスピードを加速させることができます。<br>Dは間違いです。コンピューティングキャパシティについて予測する必 要がないとは、クラウドにより、コンピューティングリソースなど、あらゆ るリソースが数分程度でデプロイできるため、必要に応じて、迅速にリソー スを確保することができるため、あらかじめ予測する必要がないことを指し ます。そのため、従来行われていたキャパシティ予測を行った上での機器調 達は不要となります。" },
+            { q: "27. 投資信託商品を販売するある企業は、販売管理を行う Web サイトを AWSで運用しています。Web サイトは、ALBの背後に配置されてい ます。同社は、クロスサイトスクリプティングやSQLインジェクショ ンから Web サイトを保護することを必要としています。同社は、ど のAWS サービスを使用すべきでしょうか。", options: ["Amazon CloudFront", "AWS WAF", "AWS Trusted Advisor", "Amazon Inspector"], correct: "b", explanation: "正解: B<br>本文参照:「AWS Web Application Firewall (AWS WAF)」 (p.209)<br>Bが正解です。AWS WAFは、AWS上のアプリケーションに対する HTTP/HTTPS通信の内容を検査し、不正な通信をブロックするためのサー ビスです。具体的には、Application Load Balancer や CloudFront に対 して行われた通信を検査して、SQLインジェクションやクロスサイトスク リプティング (XSS) 攻撃と疑われる通信であればブロックする、といった 動作が可能です。<br>Aは間違いです。Amazon CloudFront は、CDNを提供するサービス です。CloudFront と連携動作する AWS Shield はセキュリティ機能を提 供するサービスですが、AWS Shield はDDoS緩和を提供するもので Webアプリケーションのレイヤーでの攻撃遮断機能は提供しません。<br>Cは間違いです。AWS Trusted Advisor は、AWS環境がベストプラク ティスに沿ったものか評価し、ベストプラクティスとの乖離があった場合に ガイダンスを提供するサービスです。<br>Dは間違いです。Amazon Inspector は、ソフトウェアの脆弱性がない かという観点でAWS上のリソースをスキャンする脆弱性検出のサービス です。" },
+            { q: "28. ある食品宅配企業は、EコマースアプリケーションをVPC上のサブ ネット内で運用しています。同社は、インバウンドとアウトバウンド のトラフィック制御をサブネットにおいて行うことを希望していま す。同社は、どの AWS サービスを使用しますか。", options: ["Amazon Inspector", "ネットワーク ACL", "Amazon Route 53", "VPC フローログ"], correct: "b", explanation: "正解: B<br>本文参照:「セキュリティグループ・ネットワーク ACL (Network Access Control List)」 (p.144)<br>Bが正解です。ネットワーク ACLは、サブネット単位でアタッチできる ファイアウォールです。<br>Aは間違いです。Amazon Inspectorは、ソフトウェアの脆弱性がない かという観点でAWS上のリソースをスキャンする脆弱性検出のサービス です。<br>Cは間違いです。Amazon Route 53は、スケーラブルで高可用性な DNS サービスです。ドメイン名の登録、名前解決、ヘルスチェック機能な どを提供します。<br>Dは間違いです。VPCフローログは、VPC内で行われた通信のログを 記録することができる機能です。" },
+            { q: "29. パーソナルトレーニングジムを展開するある企業は、継続的なデリバ リとデプロイメントのためのソリューションを必要としています。ど のAWS サービスを使用しますか。", options: ["AWS CodeBuild", "AWS CodePipeline", "AWS Cloud9", "AWS CodeCommit"], correct: "b", explanation: "正解: B<br>本文参照:「表 9.20.3: その他の「デベロッパーツール」 カテゴリの AWS サービス」の「AWS Code Pipeline」 (p.255)<br>Bが正解です。AWS CodePipeline はソフトウェアのリリースに必要な 手順をモデル化、視覚化、自動化できる継続的なデリバリおよびデプロイメ ントのサービスです。AWS CodePipeline を使用すると、コードの構築、 実稼働前環境へのデプロイ、アプリケーションのテスト、実稼働環境へのリ リースまでの完全なリリースプロセスをモデル化できます。<br>Aは間違いです。AWS CodeBuild は、ソースコードのコンパイル、テ スト、アーティファクトの生成を行うサービスです。<br>Cは間違いです。AWS Cloud9は、ブラウザのみでコードを記述、実行、 デバッグできるクラウドベースの統合開発環境 (IDE) です。<br>Dは間違いです。AWS CodeCommitは、プライベート Gitリポジトリ をホストする、安全でスケーラビリティに優れたフルマネージド型のソース 管理サービスです。" },
+            { q: "30. AI スタートアップ企業は、システムを複数のVPCで運用してい ます。同社は、2つのVPC間でネットワーク接続を行う必要があり ます。どのAWS サービスまたは機能を使用しますか。2つ選んでく ださい。", options: ["AWS WAF", "Amazon Route 53", "VPC ピアリング", "AWS Direct Connect", "AWS Transit Gateway"], correct: ["c", "e"], explanation: "正解: C・E<br>本文参照:「VPC ピアリング」 (p.145)<br>CとEが正解です。VPCピアリングは、異なる2つのVPC間でプライベー トな通信(インターネットを経由しない)を可能にする機能です。AWS Transit Gatewayは、オンプレミスネットワークやVPCを相互接続する ためのハブになれるサービスです。<br>Aは間違いです。AWS WAFは、アプリケーションレイヤーの脅威から Web アプリケーションを保護するサービスです。<br>Bは間違いです。Amazon Route53 は、DNSの機能を提供するサービ スです。<br>Dは間違いです。AWS Direct Connect は、オンプレミスデータセンタ とVPC間の専用接続を提供するためのサービスです。" },
+            { q: "31. ある企業は、複数のLambda 関数のワークフロープロセスを調整し たいと考えています。どのAWS サービスを使用しますか。", options: ["AWS CodeBuild", "AWS CodePipeline", "AWS Batch", "AWS Step Functions"], correct: "d", explanation: "正解: D<br>本文参照:「AWS Step Functions」 (p.251)<br>Dが正解です。AWS Step Functions(以下、Step Functions)は、 AWSの各種サービスを連携させ、一連のワークフローを視覚的に構築でき るサービスです。Step Functionsにより、AWS Lambda などによるマイ クロサービスの疎結合化を行う際に、各AWSサービスなどを連携させて、 ワークフローを構築することができます。<br>Aは間違いです。AWS CodeBuildは、ソースコードのコンパイル、テ スト、アーティファクトの生成を行うサービスです。<br>Bは間違いです。AWS CodePipelineは、ソフトウェアのリリースに必 要な手順をモデル化、視覚化、自動化できる継続的なデリバリおよびデプロ イメントのサービスです。<br>Cは間違いです。AWS Batchは、AWS上でバッチ処理を実行・管理す るためのフルマネージドサービスです。" },
+            { q: "32. ある老舗日系化粧品メーカーは、週に1回データ処理を行っていま す。データ処理は通常、完了するまで5時間かかります。同社は、デー タ処理をAWS上で運用することを検討しています。同社は、どのサー ビスを使用すればよいでしょうか?", options: ["AWS Lambda", "Amazon EC2", "AWS Global Accelerator", "AWS Wavelength"], correct: "b", explanation: "正解: B<br>本文参照:「Amazon Elastic Compute Cloud (Amazon EC2)」 (p.57)<br>Bが正解です。Amazon Elastic Compute Cloud(以下、Amazon EC2)とは、仮想サーバの機能を提供するサービスです。Amazon EC2 に より、データ処理を実行することができます。<br>Aは間違いです。AWS Lambdaの1回あたりの実行時間は最長15分と なっています。<br>Cは間違いです。AWS Global Acceleratorは、AWSのグローバルネッ トワークを活用してアプリケーションの可用性とパフォーマンスを向上させ るサービスです。<br>Dは間違いです。AWS Wavelengthにより、5G ネットワークのエッジ にある通信事業者のデータセンタ内にAWSのコンピューティングおよび ストレージサービスをデプロイできます。そのため、5Gネットワーク上の デバイスから AWS クラウド上のアプリケーションリソースへのネットワー クホップ数をおさえることができます。" },
+            { q: "33. ある空調機メーカーは、AWSでシステムを運用しています。同社の 運用チームは、AWS リソースに対する構成変更の記録・評価と、修 復アクションの実行を必要としています。同社は、どのAWS サービ スを使用すべきでしょうか。", options: ["AWS Config", "AWS Key Management Service", "AWS CloudTrail", "AWS Trusted Advisor"], correct: "a", explanation: "正解: A<br>本文参照:「AWS Config」 (p.170)<br>Aが正解です。AWS Configは、AWS リソースの設定変更の履歴を記 録できるサービスです。また、AWS リソースの設定変更に対してルールを 定義でき、ルール違反の変更があった場合に自動で対応する(修復アクショ ン) ことも可能です。<br>Bは間違いです。AWS Key Management Serviceは、暗号鍵の作成・ 管理・制御を安全に行うためのサービスです。<br>Cは間違いです。AWS CloudTrail は、AWS アカウントで行われた操 作(アクティビティ)の記録を保存し、監査等に使用することができるサー ビスです。<br>Dは間違いです。AWS Trusted Advisor は、AWS環境がベストプラク ティスに沿ったものか評価し、ベストプラクティスとの乖離があった場合に ガイダンスを提供するサービスです。" },
+            { q: "34. ある総合エンタメサイトの運営会社は、データを関連付けるためのス ケーラブルで可用性の高いプラットフォームを必要しており、現在グ ラフデータベースの使用を検討しています。これらの要件を満たす AWS サービスはどれですか。", options: ["Amazon Aurora", "Amazon Redshift", "Amazon QLDB", "Amazon Neptune"], correct: "d", explanation: "正解: D<br>本文参照:「表5.5.1: その他のデータベースサービス」の「Amazon Neptune」 (p.130)<br>Dが正解です。Amazon Neptuneは、フルマネージド型のグラフデータ ペースです。<br>Aは間違いです。Amazon Aurora は Amazon RDSのデータベースエ ンジンの1つとして提供されていますが、他のデータベースエンジンとは 異なり、クラウド上で最適に動作するように再設計されたリレーショナル データベースサービスです。<br>Bは間違いです。Amazon Redshift は、ペタバイト級までスケールアウ トできる、SQLを使ったデータウェアハウス (DWH)・分析向けに特化し たフルマネージドの列指向データベースサービスです。<br>Cは間違いです。Amazon QLDBは、変更履歴を改ざん不可な形で記録・ 検証できる台帳データベースを提供するサービスです。" },
+            { q: "35. ショッピングセンタのある運用企業は、監査対応のため、AWSのコ ンプライアンスとセキュリティに関するドキュメントをダウンロー ドする必要があります。ドキュメントを提供できる AWSのサービス はどれですか。", options: ["Amazon Detective", "AWS Artifact", "AWS Well-Architected Tool", "AWS Systems Manager"], correct: "b", explanation: "正解: B<br>本文参照:「AWS Artifact」 (p.215)<br>Bが正解です。AWS Artifactは、AWSに関するセキュリティやコンプ ライアンス関係のドキュメントをダウンロードしたり、AWSとの契約状況 をオンデマンドで確認したりするためのサービスです。<br>Aは間違いです。Amazon Detectiveは、セキュリティインシデントの 根本原因を調査・分析することで。脅威の可視化と迅速な対応を支援するサー ビスです。<br>Cは間違いです。AWS Well-Architected Toolは、AWS Well- Architected Frameworkへの準拠状況をレビューできるサービスです。コ ンソールで準拠状況をチェックするための質問が提示されるため、それらに 回答していくことで、レビューが実施されます。<br>Dは間違いです。AWS Systems Manager は、AWS リソースに対する 運用管理を自動化できるサービスです。" },
+            { q: "36. ある空調機メーカーは、データを長期保存でき、かつ低コストのスト レージを必要としています。同社は、どのAWS サービスまたはスト レージクラスを使用しますか?", options: ["Amazon S3 Glacier Deep Archive", "AWS Snowball", "Amazon MQ", "Amazon EMR"], correct: "a", explanation: "正解: A<br>本文参照:「ストレージクラス」 (p.86)<br>Aが正解です。Amazon S3 Glacier Deep Archiveは、Amazon S3の ストレージクラスの中で、コストおよびアクセス頻度が低いストレージクラ スとなります。<br>Bは間違いです。AWS Snowball を含む、AWS Snow Familyは、物 理アプライアンスを用いて、ローカル環境に存在する大量のデータを、 Amazon S3 バケットヘオフライン移行するためのサービスです。<br>Cは間違いです。Amazon MQは、システム間でメッセージを送受信す ることができるマネージドのメッセージキューサービスです。<br>Dは間違いです。Amazon EMRは、大規模なデータ処理や分析を Hadoop Spark などのフレームワークを用いて実行できるサービスです。" },
+            { q: "37. ある保険販売企業は、アプリケーションのAWS 移行を検討していま す。アプリケーションは Docker ペースであり、運用オーバヘッドを 最小限に抑えることを必要としています。これらの要件を満たすソ リューションはどれですか。", options: ["Amazon EC2 インスタンス上にDocker をデプロイ", "AWS AppSync", "Amazon Elastic Container Registry (Amazon ECR)", "Amazon Elastic Container Service (Amazon ECS)"], correct: "d", explanation: "正解: D<br>本文参照:「Amazon Elastic Container Service (Amazon ECS)」(p.69)<br>Dが正解です。Amazon Elastic Container Service(以下、Amazon ECS)は、コンテナ化されたアプリケーションをデプロイ、管理、スケーリ ングすることができる、フルマネージド型のコンテナオーケストレーション サービスです。Amazon ECSは、Docker という軽量で高速に動作するコ ンテナプラットフォームをベースにしています。<br>Aは間違いです。Amazon EC2 インスタンス上に Docker を構築する場 合、運用はユーザ側で行う必要があるため、運用オーバーヘッドについて、 ほかのソリューションと比較して、最小限に抑えられていません。<br>Bは間違いです。AWS AppSyncは、Web API を開発するためのクエ 言語である GraphQLを活用し、複数のデータソースを統合し安全にア クセス・操作できる AWSのサーバレス型マネージドサービスです。<br>Cは間違いです。Amazon Elastic Container Registryは、フルマネー ジド型のコンテナレジストリです。" },
+            { q: "38. ある企業は、AWS上でデータベースを運用しています。同社は、バッ クアップファイルを長期的に保存するために、Amazon S3を使用し ています。最もコスト効率の高いストレージクラスはどれですか。", options: ["S3 Glacier Deep Archive", "S3 1ゾーン-低頻度アクセス (S3 1-Zone-IA)", "S3 標準-低頻度アクセス (S3 標準-IA)", "S3 標準"], correct: "a", explanation: "正解: A<br>本文参照:「ストレージクラス」 (p.86)<br>Aが正解です。Amazon S3 Glacier Deep Archive は、Amazon S3の ストレージクラスの中で、コストおよびアクセス頻度が低いストレージクラ スとなります。<br>BとCとDは間違いです。Amazon S3では、以下のストレージクラス が提供されています。そのため、S3標準、S3標準- 低頻度アクセス、S3 1ゾーン -低頻度アクセスは、最もコスト効率が高いとは言えません。" },
+            { q: "39. IAM ポリシーが付与されていない、新規に作成されたIAM ユーザを 使用して AWS アカウントにログインし、アカウント内のAWS リソー スを表示しようとするとどうなりますか。", options: ["すべてのAWSサービスは、デフォルトで読み取り専用アクセスにな ります。", "すべてのAWS リソースへのアクセスは拒否されます。", "すべての AWS リソースへのアクセスが許可されます。", "AWS リソースへのアクセスは、AWS CLI を通じて許可されます。"], correct: "b", explanation: "正解: B<br>本文参照:「IAM ポリシー」 (p.203)<br>Bが正解です。新しく作成されたIAM ユーザにIAM ポリシーがアタッ チされていない場合、そのユーザにはAWS リソースにアクセスするため のアクセス許可がありません。デフォルトでは、アクセス権限のないユーザ は、アカウント内のアクションを実行したり、リソースを表示したりするこ とはできません。<br>AとCとDは間違いです。新しく作成されたIAM ユーザにIAM ポリシー がアタッチされていない場合、そのユーザにはAWS リソースにアクセス するためのアクセス許可がありません。よって、アクセスが許可されている という記載は誤りです。" },
+            { q: "40. 予測されるニーズではなく、現在のニーズに基づいて支払いを行うこ とができる、AWS クラウドの機能はどれですか。", options: ["AWS Billing Conductor", "従量課金制", "ボリュームディスカウント", "セービングプラン"], correct: "b", explanation: "正解: B<br>本文参照:「AWS クラウドのメリット」の「①導入コスト (初期費用)を抑 えられる」 (p.288)<br>Bが正解です。AWSでは幅広いクラウドサービスを従量課金制で提供し ています。AWSでは、各サービスについて、実際に使ったリソースの量に 応じて料金を支払います。そのため、初期費用、長期契約、複雑なライセン ス契約などは必要ありません。<br>Aは間違いです。AWS Billing Conductor は、複数アカウントの請求を 集約・管理し、カスタム料金やコスト配分ルールを設定できる請求管理サー ビスです。<br>Cは間違いです。ボリュームディスカウントとは、使用量が増加するにつ れて、単位あたりのコストが段階的に安くなる仕組みです。<br>Dは間違いです。セービングプランは、1~3年の長期契約により、最 大72%の割引を受けられる購入オプションです。" },
+            { q: "41. AWS クラウドコンピューティングの利点は次のどれですか。", options: ["初期投資を維持できます。", "小規模なスケールのため、支払いが高額になります。", "固定費を変動費に交換します。", "弾力性をパフォーマンスに交換します。"], correct: "c", explanation: "正解: C<br>本文参照:「AWS クラウドのメリット」の「①導入コスト (初期費用)を抑 えられる」 (p.288)<br>Cが正解です。固定費を変動費に変換できます。従来はデータセンタ、サー バ、ストレージなどに多額の設備投資を行う必要がありました。しかし、ク ラウドサービスを利用することにより、ユーザは、リソースを使用したとき にのみ、使用した分のみを支払うようにできます。<br>AとBとDは間違いです。クラウドコンピューティングの利用によるメ リットは以下の6つです。<br>・固定費を変動費に交換<br>・大規模な規模の経済の恩恵を受ける<br>・能力を推測するのをやめる<br>・スピードと俊敏性の向上<br>・データセンタの運用と維持にかかる費用の消費を停止する<br>・数分でグローバルに展開" },
+            { q: "42. ある店舗向けDXサービスを推進する企業はオンプレミスでシステム を運用しており、サードパーティ製サービスを使用して、10TB のデー タをテープライブラリにバックアップしています。同社は、最近オン プレミスのバックアップサーバの容量が不足していることに気付き ました。この会社は、既存のバックアップワークフローを変更せずに、 バックアップとしてAWS サービスを使用したいと考えています。こ れらの要件を満たすには、どのAWS サービスを使用すればよいで しょうか。", options: ["Amazon Elastic Block Store (Amazon EBS)", "AWS Storage Gateway", "Amazon Elastic Container Service (Amazon ECS)", "Amazon MQ"], correct: "b", explanation: "正解: B<br>本文参照:「AWS Storage Gateway」 (p.103)<br>Bが正解です。AWS Storage Gatewayは、オンプレミスのストレージ をクラウドに拡張するためのサービスです。AWS Storage Gateway の Tape Gatewayにより、仮想テープライブラリ (VTL)を使用し、バック アップデータを仮想テープとしてAmazon S3に保存することができます。 これにより、ワークフローを変更することなく、バックアップとして AWS サービスを使用することができます。<br>Aは間違いです。Amazon Elastic Block Storeは、Amazon EC2 向け に設計されたブロックストレージサービスです。<br>Cは間違いです。Amazon Elastic Container Serviceは、コンテナ化さ れたアプリケーションをデプロイ、管理、スケーリングすることができる、 フルマネージド型のコンテナオーケストレーションサービスです。<br>Dは間違いです。Amazon MQは、Apache ActiveMQ RabbitMQ を使いアプリケーション間のメッセージ通信を実現するメッセージブロー カーサービスです。" },
+            { q: "43. ある核融合炉メーカーは、AWSにおけるトラフィック制御を計画し ています。同社が、VPCトラフィックを制御するために使用できる AWS サービスまたは機能はどれですか。2つ選んでください。", options: ["セキュリティグループ", "AWS Direct Connect", "Amazon GuardDuty", "ネットワーク ACL", "AWS IAM"], correct: ["a", "d"], explanation: "正解: A・D<br>本文参照:「セキュリティグループ・ネットワーク ACL (Network Access Control List)」 (p.144)<br>AとDが正解です。セキュリティグループとネットワークACLは、と もにファイアウォール (FW)の機能です。HTTPの通信は許可、SSHの 通信は拒否といったように、プロトコル単位でインバウンドとアウトバウン ドの通信の制御を行うことができます。<br>セキュリティグループは、EC2 インスタンス等の AWS リソース単位で アタッチできるFWです。一方で、ネットワーク ACLは、サブネット単位 でアタッチできるFWです。<br>Bは間違いです。AWS Direct Connect は、オンプレミスデータセンタ とVPC間の専用接続を提供するためのサービスです。<br>Cは間違いです。Amazon GuardDutyは、セキュリティ上の脅威が発 生していないかという観点で、AWSアカウントやネットワーク通信を監視 する脅威検出のサービスです。<br>Eは間違いです。AWS IAMは、ユーザやロールに対してAWS リソー スへのアクセス権限を安全に管理・制御できるサービスです。" },
+            { q: "44. Amazon S3 に保存されているデータを暗号化できる AWSのサービ スあるいは機能はどれですか。2つ選んでください。", options: ["Amazon Inspector", "サーバ側の暗号化", "Amazon GuardDuty", "クライアント側の暗号化"], correct: ["b", "d"], explanation: "正解: B・D<br>本文参照:「暗号化の方式」 (p.95)<br>BとDが正解です。すべてのAmazon S3 バケットにはデフォルトで暗号化 が設定されており、S3バケットにアップロードされるすべての新しいオブ ジェクトは保管時に自動的に暗号化されます。Amazon S3 マネージドキー を使用したサーバ側の暗号化 (SSE-S3)は、Amazon S3のすべてのパケッ トのデフォルトの暗号化設定です。別のタイプの暗号化を使用するには、 S3 PUT リクエストで使用するサーバ側の暗号化のタイプを指定するか、レ プリケート先バケットでデフォルトの暗号化設定を設定します。クライアント側の暗号化は、データをローカルで暗号 化することで、転送時および保管時のセキュリティを確保するためのもので す。Amazon S3に送信する前にオブジェクトを暗号化するには、Amazon S3 暗号化クライアントを使用します。暗号化のためのツール、方式、鍵の 管理はクライアント側で行うため、AWS側の機能ではありませんが、選択肢としては正解です。" },
+            { q: "45. ある地方自治体が、AWSへのデータベースの移行を検討しています。 PostgreSQL と互換性があり、かつマネージド型の AWS サービスを 希望しています。これらの要件を満たす AWS サービスはどれですか。 2つ選んでください。", options: ["Amazon Athena", "Amazon RDS", "Amazon EC2", "Amazon Redshift", "Amazon Aurora"], correct: ["b", "e"], explanation: "正解: B・E<br>本文参照:「多彩なデータベースエンジン」 (p.124)、「MySQL PostgreSQL との互換性がある」 (p.126)<br>BとEが正解です。Amazon RDSで使用できるデータベースのエンジン として、Amazon Aurora、MySQL、PostgreSQL、MariaDB、Oracle Database、SQL Server、DB2が用意されています。Amazon Aurora は MySQL PostgreSQL と互換性があります。<br>Aは間違いです。Amazon Athenaは、標準的なSQLを使用して Amazon S3 内のデータを直接分析することができるサーバレスな分析サー ビスです。PostgreSQL と互換性はありません。<br>Cは間違いです。Amazon EC2 上に構築した場合、アンマネージドとな ります。<br>Dは間違いです。Amazon Redshift は列指向データベースを提供する サービスです。SQLを使用してクエリを実行できますが、PostgreSQL の 一部の機能と互換性がありません。" },
+            { q: "46. ある金融機関は、行員用の作業デスクトップとして、インターネット からリモートアクセスでき、永続的な仮想デスクトップコンピュータ を必要としています。どのAWS サービスがこの機能を提供していま すか。", options: ["Amazon Connect", "Amazon Macie", "Amazon WorkSpaces", "Amazon AppStream 2.0"], correct: "c", explanation: "正解: C<br>本文参照:「Amazon WorkSpaces」 (p.253)<br>Cが正解です。Amazon WorkSpaces は、AWS が提供するフルマネー ジド型でセキュアな永続的な仮想デスクトップサービスです。<br>Aは間違いです。Amazon Connectは、クラウドベースで、コールセン タで必要となる機能を提供するサービスです。<br>Bは間違いです。Amazon Macieは、機械学習を活用してS3内の機密デー 夕を自動的に検出・分類・保護するサービスです。<br>Dは間違いです。Amazon AppStream 2.0は、非永続的な仮想デスクトッ プ環境、もしくはアプリケーションに即座に、またセキュアに、アクセスす ることができる、フルマネージド型のストリーミングサービスです。非永続 的な仮想デスクトップ環境であるため、毎回新しいデスクトップとなり、永 続的なデスクトップではありません。" },
+            { q: "47. ビジネス価値の観点からワークロードの全体的な効率を測定すると いう設計原則は、AWS Well-Architected フレームワークのどの柱に 含まれますか。", options: ["運用上の優秀性", "セキュリティ", "信頼性", "サステナビリティ"], correct: "a", explanation: "正解: A<br>本文参照:「運用上の優秀性」 (p.295)<br>Aが正解です。運用上の優秀性の柱には、開発をサポートし、ワークロー ドを効率的に実行し、運用に関する洞察を得て、ビジネス価値をもたらすた め、サポートのプロセスとステップを継続的に改善する能力が含まれます。<br>Bは間違いです。セキュリティの柱では、データ、システム、資産を保護 するため、クラウドテクノロジーを活用し、セキュリティを強化する能力に ついて説明されています。<br>Cは間違いです。信頼性の柱には、期待どおりに正しく実行するワークロー ドの能力が含まれます。これには、ワークロードのライフサイクル全体を通 じて、ワークロードを運用およびテストする能力が含まれます。<br>Dは間違いです。サステナビリティの柱には、システムのアーキテクチャ を評価して、エネルギー消費量を削減し、効率性を向上させる能力が含まれ ています。" },
+            { q: "48. 暗号通貨取引所を運営する企業は、複数のワークロードをAWSへの 移行を検討しています。同社は、アプリケーションの信頼性を向上し たいと考えています。この目標を達成するために、企業はどのクラウ ド設計原則を実装する必要がありますか。", options: ["使用率を最大化します。", "コンポーネントを分離します。", "リソースのサイズを適正化します。", "従量課金制を使用します。"], correct: "b", explanation: "正解: B<br>本文参照:「信頼性」(p.296)<br>Bが正解です。信頼性の柱には、期待どおりに正しく実行するワークロー ドの能力が含まれます。これには、ワークロードのライフサイクル全体を通 じて、ワークロードを運用およびテストする能力が含まれます。具体的な方 式として、システムのコンポーネントに対して、マイクロサービスを使用し、 疎結合化(=分離) することにより、システム全体の信頼性を高めることが できます。<br>Aは間違いです。使用率を最大化する設計原則は、サステナビリティの柱 に含まれます。使用率を最大化する設計原則により、ワークロードのサイズ を適正化し、効率的な設計を実装して、使用率を高く保ち、基盤となるハー ドウェアのエネルギー効率を最大化することを目的としています。<br>Cは間違いです。リソースのサイズを適正化することにより、無駄なリソー スが削減され、全体的なコスト最適化に繋がります。<br>Dは間違いです。従量課金制により、ハードウェア導入に伴う多額の初 期投資が不要になります。" },
+            { q: "49. ある物流サービス企業は、複数の AWS アカウントを運用しています。 同社は、AWS 環境内でセキュリティポリシーと課金サービスを一元 管理を必要としています。これらの要件を満たすには、どのAWS サー ビスを使用すればよいでしょうか。", options: ["AWS Identity and Access Management (IAM)", "AWS Organizations", "AWS Control Tower", "AWS Config"], correct: "b", explanation: "正解: B<br>本文参照:「AWS Organizations」 (p.174)<br>Bが正解です。AWS Organizations は、AWSのマルチアカウント環境 を管理するためのサービスです。具体的にはアカウントやアカウントのグ ループ単位でポリシー (サービスコントロールポリシー、SCP) をアタッチ してガバナンスの制御ができたり、複数のアカウントからの請求を一つにま とめたり(一括請求、コンソリデーティッドビリング) することができます。<br>Aは間違いです。AWS IAMは、ユーザやロールに対して AWS リソー スへのアクセス権限を安全に管理・制御できるサービスです。<br>Cは間違いです。AWS Control Tower は、複数アカウントを管理する ためのセキュアなランディングゾーンを構築できるサービスです。<br>Dは間違いです。AWS Configは、AWS リソースの構成変更を記録・ 評価・監査できるサービスです。" },
+            { q: "50. あるスポーツ財団法人は、データベースをAWSで運用することを検 討しています。同社は、データベースのパスワードの安全な保存と暗 号化を必要としています。使用できる AWS サービスはどれですか。", options: ["AWS WAF", "AWS Secrets Manager", "AWS Identity and Access Management (IAM)", "Amazon Cognito"], correct: "b", explanation: "正解: B<br>本文参照:「AWS Secrets Manager」 (p.213)<br>Bが正解です。AWS Secrets Manager は、データベースの認証情報に 代表される機密情報の管理や自動更新 (ローテーション) を可能にするサー ビスです。AWS Secrets Managerのメリットや特徴は、以下の通りです。<br>・ソースコードに直接認証情報を保存するのに比べて、セキュリティを高 められる。<br>・自動的に機密情報の更新 (ローテーション) ができるため、運用の負荷 を下げられる。<br>Aは間違いです。AWS WAFは、悪意のあるトラフィックから Webア プリケーションを保護するサービスです。<br>Cは間違いです。AWS Identity and Access Management (IAM)は、 AWSのサービスやリソースに対する認証と認可を制御するサービスです。<br>Dは間違いです。Amazon Cognitoは、Webアプリケーションやモバ イルアプリケーションに対するユーザ認証と認可を提供するサービスです。" },
+            { q: "51. あるモーターサイクルメーカーは、多くのデータを Amazon S3 に保 存しています。同社は、サーバレスで、標準SQLを使用してS3の データを分析する必要があります。これらの要件を満たす AWS サー ビスはどれですか。", options: ["Amazon Redshift", "AWS Glue", "Amazon Athena", "Amazon OpenSearch Service"], correct: "c", explanation: "正解: C<br>本文参照:「Amazon Athena」 (p.244)<br>Cが正解です。Amazon Athenaは、標準的なSQLを使用して Amazon S3 内のデータを直接分析することができるサーバレスな分析サー ビスです。<br>Aは間違いです。Amazon Redshift は、ペタバイト級までスケールアウ トできる、SQLを使ったデータウェアハウス (DWH)・分析向けに特化し たフルマネージドの列指向データベースサービスです。Amazon Redshift で、Amazon S3内のデータを直接クエリするサービスは、Amazon Redshift Spectrum となります。<br>Bは間違いです。AWS Glueは、フルマネージドのETLツールです。<br>Dは間違いです。Amazon OpenSearch Serviceは、ログ分析、フルテ キスト検索、可視化を可能にする検索サービスです。" },
+            { q: "52. あるワークフローシステムの開発企業は、開始と終了を自由に制御で きるワークロードを Amazon EC2 インスタンスで運用しています。 同社は、予算が限られており、コストを最小限に抑える必要がありま す。どの料金モデルを選択するのが最適ですか?", options: ["スポットインスタンス", "コンバーチブルリザーブドインスタンス", "スタンダードリザーブドインスタンス", "専有インスタンス"], correct: "a", explanation: "正解: A<br>本文参照:「スポットインスタンス」 (p.61)<br>Aが正解です。スポットインスタンスは、未使用のEC2 インスタンスを リクエストすることで、最大90%の割引で利用できる購入オプションです。 しかし、スポットインスタンスの需要が増加した場合や、供給が減少した場 合には、中断される可能性があります。中断される際には、中断が発生する 2分前に警告が提供されます。そのため、スポットインスタンスは、中断が 許容される、開始・終了が柔軟に対応できるワークロードや、ステートレス(行 われる処理同士の情報や参照を保持しない) ワークロードが向いています。<br>BとCは間違いです。コンバーチブルリザーブドインスタンスおよびス タンダードリザーブドインスタンスは、リザーブドインスタンスにおいて選 択できるオプションです。ともに、1年間もしくは3年間の長期契約による 割引となります。そのため、基本的に中断を許容しないワークロードに向い ています。<br>Dは間違いです。専有インスタンスは、ユーザ専用の物理サーバが提供 される購入オプションです。専有インスタンスにより、コンプライアンス要 件など、他のユーザと異なる物理サーバ上で起動する必要がある場合などに 利用することができます。" },
+            { q: "53. ある小売販売店は、オンプレミスでリレーショナルデータベースを運 用しており、AWS へ移行することを検討しています。同社は、メン テナンスタスク、管理オーバーヘッドを最小化することを必要として います。これらの要件を満たす AWS サービスはどれですか。", options: ["Amazon QLDB", "Amazon EC2", "Amazon Neptune", "Amazon RDS"], correct: "d", explanation: "正解: D<br>本文参照:「Amazon Relational Database Service (Amazon RDS)」 (p.123)<br>Dが正解です。Amazon Relational Database Service (以下、Amazon RDS)は、リレーショナルデータベースのサービスです。データベース管理 者は、Amazon RDSにより、データベースの構築、パッチの適用作業、バッ クアップの構成、スタンバイデータベースの構築、障害発生時の自動フェイ ルオーバーなど、さまざまな作業から解放されます。<br>Aは間違いです。Amazon QLDBは、変更履歴を改ざん不可な形で記録・ 検証できる台帳データベースサービスです。<br>Bは間違いです。Amazon EC2を使用し、データベースサーバを構築す ることは可能ですが、Amazon EC2 インスタンスの構築、運用管理が発生 するため、メンテナンスタスクのオーバーヘッドは、Amazon RDS と比較 すると、最小限とは言えません。<br>Cは間違いです。Amazon Neptuneは、フルマネージド型のグラフデー タベースです。" },
+            { q: "54. のある食品メーカーは、顧客サポートのためのチャットボットを作成し ています。チャットボットは、同社のWebアプリケーションに統合 することを検討しています。これらの要件を満たす AWS サービスは どれですか。", options: ["Amazon Kendra", "Amazon Lex", "Amazon Textract", "Amazon Rekognition"], correct: "b", explanation: "正解: B<br>本文参照:「表9.20.5: その他の「機械学習」 カテゴリのAWS サービス」の「Amazon Lex」 (p.256)<br>Bが正解です。Amazon Lexは音声とテキストを使用してアプリケーショ ンの会話型インターフェイスを構築するためのAWSのサービスです。 Amazon Lexにより、開発者はチャットボットを迅速に構築することがで きます。<br>Aは間違いです。Amazon Kendra は自然言語処理と高度な機械学習ア ルゴリズムを使用して、データから検索質問に対する具体的な回答を返すイ ンテリジェントな検索サービスです。<br>Cは間違いです。Amazon Textract はPDFファイルや画像ファイルな どの各種ファイルからテキストを抽出するフルマネージドの機械学習サービ スです。<br>Dは間違いです。Amazon Rekognitionは、深層学習に基づいた、フル マネージド型の画像・動画分析サービスです。" },
+            { q: "55. ステートフルなあるワークロードを、今後3年間、Amazon EC2 イ ンスタンスで運用するニーズがあります。このワークロードに対して 最もコスト効率の高い料金モデルはどれですか。", options: ["専用ホスト", "リザーブドインスタンス", "専有インスタンス", "スポットインスタンス"], correct: "b", explanation: "正解: B<br>本文参照:「リザーブドインスタンス」 (p.61)<br>Bが正解です。リザーブドインスタンスは、1年間もしくは3年間の長期 契約による割引となります。リザーブドインスタンスにより、契約期間中に、 EC2 インスタンスを停止しても、料金は変わらないため、24時間365日、 中断なく起動しておく必要があるような企業のホームページなどのワーク ロードに向いています。<br>Aは間違いです。専用ホストは、ユーザ専用の物理サーバが提供される購 入オプションです。柔軟なライセンス管理などが可能な反面、オンデマンド よりも料金は高くなります。<br>Cは間違いです。専有インスタンスは、ユーザ専用の物理サーバが提供さ れる購入オプションです。専有インスタンスにより、コンプライアンス要件 など、他のユーザと異なる物理サーバ上で起動する必要がある場合などに利 用することができます。料金としては、オンデマンドよりも高くなるため、 コスト効率が高いとは言えません。<br>Dは間違いです。スポットインスタンスは、未使用のEC2 インスタンス をリクエストすることで、最大90%の割引で利用できる購入オプションで す。しかし、スポットインスタンスの需要が増加した場合や、供給が減少し た場合には、中断される可能性があります。中断される際には、中断が発生 する2分前に警告が提供されます。そのため、スポットインスタンスは、 中断が許容される、開始・終了が柔軟に対応できるワークロードや、ステー トレス(行われる処理同士の情報や参照を保持しない) ワークロードが向い ています。" },
+            { q: "56. ある出版・放送メディア企業は、AWS上でEコマースサービスを運 用しています。サービスは、単一の AWS リージョンの複数のAZで 実行されており、Amazon S3 標準ストレージクラスに保存されてい るコンテンツを配信しています。同社は、Eコマースサービスのパ フォーマンスをグローバルに向上させたいと考えています。この要件 を満たすには、会社はどうすればよいですか。", options: ["S3 ストレージクラスをS3 Glacier Deep Archive に変更します。", "Amazon CloudFront ディストリビューションをデプロイして、Eコ マースサービスのコンテンツをエッジロケーションにキャッシュしま す。", "EコマースサービスにAmazon EKS を使用します。", "Eコマースサービスのサーバーを、AWS Elastic Beanstalk に移行し ます。"], correct: "b", explanation: "正解: B<br>本文参照:「Amazon CloudFront」 (p.149)<br>Bが正解です。Amazon CloudFrontは、コンテンツデリバリネットワー ク (CDN) のサービスです。CloudFront を使用すると、特定リージョン にあるコンテンツ(動画ファイル等) のキャッシュをエッジロケーションに 配置することができます。これにより、世界中のユーザに近い距離からレス ポンスを返すことが可能になり、低レイテンシでアクセスさせることができ ます。<br>Aは間違いです。S3 Glacier Deep Archiveは、ストレージ料金が最も 安いストレージクラスです。その反面、データの取り出し時に復元操作が必 要となり、迅速なデータの配布ができなくなります。<br>Cは間違いです。Amazon EKSは、Kubernetes クラスタのデプロイ・ 管理・スケーリングなどを簡素化するサービスです。EKSだけではサービ スのパフォーマンスをグローバルに向上させるとは言えません。<br>Dは間違いです。AWS Elastic Beanstalkは、アプリケーションのデプ ロイから管理までを自動化できるサービスです。Elastic Beanstalk だけで はサービスのパフォーマンスをグローバルに向上させるとは言えません。" },
+            { q: "57. AWS アカウントおよびAWS リソースのセキュリティとコンプライ アンスに関する責任をAWSと共有しているグループはどれですか?", options: ["ハードウェアベンダ", "ユーザ", "再販パートナ", "インターネットプロバイダ"], correct: "b", explanation: "正解: B<br>本文参照:「責任共有モデル」 (p.299)<br>Bが正解です。責任共有モデルとは、AWS クラウドのコンポーネントご とに、セキュリティおよびコンプライアンスについて、AWSとユーザのど ちらが責任を持つべきかを示したものとなります。<br>AとCとDは間違いです。責任共有モデルとは、AWSクラウドのコンポー ネントごとに、セキュリティおよびコンプライアンスについて、AWSとユー ザのどちらが責任を持つべきかを示したものとなります。そのため、ハード ウェアベンダ、再販パートナ、インターネットプロバイダではありません。" },
+            { q: "58. ある企業は、オンプレミスから AWS クラウドヘネットワーク接続する 際に、一貫した低レイテンシで、安定した専用接続のネットワークを 必要としています。どのAWS サービスを使用することができますか。", options: ["Amazon VPC", "Amazon Kinesis Data Streams", "AWS Direct Connect", "AWS Transit Gateway"], correct: "c", explanation: "正解: C<br>本文参照:「AWS Direct Connect」 (p.147)<br>Cが正解です。AWS Direct Connect は、オンプレミスデータセンタと AWS間の専用接続を提供するためのサービスです。Direct Connect は、 通信経路としてインターネットを使用しません。そのため、通信品質の向上 やセキュリティポリシーへの対応が可能になります(企業によっては、セキュ リティポリシーによって、インターネット経由の通信が禁止されています)。<br>Aは間違いです。Amazon VPCは、AWS クラウドの中に、ユーザ専用 の仮想的なネットワークを構成するためのサービスです。<br>Bは間違いです。Amazon Kinesis Data Streamsは、各種データソー スからのデータレコードを取り込み、保存することにより、リアルタイムデー タストリームの収集と高度な加工の機能を提供します。<br>Dは間違いです。AWS Transit Gatewayは、複数のVPCと、サイト 間 VPNやDirect Connect を一元的に接続・管理できるサービスです。 Transit Gateway だけでは、オンプレミスのデータセンタと AWS間を接 続できません。" },
+            { q: "59. AWS クラウドの設計原則は次のうちどれですか。2つ選んでくださ い。", options: ["AWS リソースの利用料金は、すべて前払いします。", "データに基づいて決定し、クラウドアーキテクチャの設計を決定します。", "変更を可能にするために手動プロセスを重視します。", "実稼働規模でシステムをテストします。", "一度決めた運用手順に対する変更は許容しません。"], correct: ["b", "d"], explanation: "正解: B・D<br>本文参照:「AWS Well-Architected フレームワーク」(p.294)<br>BとDが正解です。AWS Well-Architected フレームワークは、AWS を設計・構築する際のベストプラクティス集です。AWS Well- Architected フレームワークは、「一般的な設計原則」が構成されています。 一般的な設計原則の概要は以下のとおりです。<br>・キャパシティニーズの推測が不要<br>・本稼働スケールでシステムをテストする<br>・アーキテクチャの実験を念頭に置いた自動化<br>・発展するアーキテクチャを検討する<br>・データに基づいてアーキテクチャを駆動<br>・ゲームデーを利用して改善する<br>AとCとEは間違いです。各原則は、AWS Well-Architected フレー ムワークの「一般的な設計原則」に含まれていません。" },
+            { q: "60. あるプログラミング教育サービスの提供企業は、複数の AWS アカウ ントをAWS Organizations で管理しています。同社は、AWS サー ビス・機能を使用して、メンバーアカウントのAWS サービスへのア クセス制御を行うことを必要としています。どのAWSサービスまた は機能を使用しますか。", options: ["ルートユーザ", "サービスコントロールポリシー (SCP)", "組織単位(OU)", "アクセス制御リスト (ACL)"], correct: "b", explanation: "正解: B<br>本文参照:「AWS Organizations」 (p.174)<br>Bが正解です。AWS Organizations は、AWSのマルチアカウント環境 を管理するためのサービスです。具体的にはアカウントやアカウントのグ ループ単位でポリシー (サービスコントロールポリシー、SCP) をアタッチ してガバナンスの制御ができたり、複数のアカウントからの請求を一つにま とめたり(一括請求、コンソリデーティッドビリング) することができます。<br>Aは間違いです。ルートユーザは、AWSアカウントへの全ての権限を保 有するユーザーであるため、アクセスを制限できません。<br>Cは間違いです。組織単位(Organizational Units/OU)は、AWSア カウントを階層構造で管理するためのフォルダのようなものです。<br>Dは間違いです。アクセスコントロールリストは、Amazon S3のパケッ トとバケット内のオブジェクトへのアクセス制御を行う機能です。" },
+            { q: "61. 物理的な保護、インフラストラクチャの管理、仮想レイヤの管理等、 AWS サービスが稼働する施設に関連したセキュリティの責任を負う のは、AWSの責任共有モデルによれば、だれですか。", options: ["お客様", "AWS", "AWS とお客様の共同責任", "AWSとの契約方式による"], correct: "b", explanation: "正解: B<br>本文参照:「責任共有モデル」 (p.299)<br>Bが正解です。AWSは、AWS クラウドで提供されるすべてのサービス を実行するインフラストラクチャの保護について責任を負います。 このインフラストラクチャはハードウェア、ソフトウェア、ネットワーキ ング、AWSのサービスを実行する施設で構成されます。<br>Aは間違いです。仮想化レイヤから AWS サービスが稼働する施設の物 理的なセキュリティは、AWS 側の責任範囲であり、お客様側の責任範囲で はありません。<br>Cは間違いです。仮想化レイヤから AWS サービスが稼働する施設の物 理的なセキュリティについて、AWSのデータセンタは、非公開であるため、 お客様はアクセスすることができません。<br>Dは間違いです。AWSとの契約方式によって、責任範囲が変わるわけで はありません。" },
+            { q: "62. ある行政手続き代行会社は、個人情報が混在する大量のデータを保持 しています。セキュリティチームは、データの中に個人情報や機密 データがあるかを特定する必要があります。どのAWSサービスがこ の要件を満たしますか。", options: ["Amazon Inspector", "Amazon Macie", "AWS IAM Identity Center", "Amazon CloudWatch"], correct: "b", explanation: "正解: B<br>本文参照:「Amazon Macie」 (p.213)<br>Bが正解です。Amazon Macieは、S3内の機密データの検出を行い、デー タセキュリティリスクの可視化を行えるサービスです。Amazon Macieでは、 機械学習とパターンマッチングを使用して、機密データの検出を行います。<br>Aは間違いです。Amazon Inspectorは、ソフトウェアの脆弱性がない かという観点でAWS上のリソースをスキャンする脆弱性検出のサービス です。<br>Cは間違いです。AWS IAM Identity Centerは、複数のAWSアカウ ントや SaaS へのシングルサインオンとアクセス管理を一元化するサービス です。<br>Dは間違いです。Amazon CloudWatchは、AWS リソースの性能値(メ トリクス)とログのモニタリングができるサービスです。" },
+            { q: "63. ある決済サービス企業は、Amazon EC2 インスタンスでシステムを 運用しています。同社は、EC2 インスタンスのセキュリティルールを 適用する必要があります。この機能を提供する AWS サービスまたは 機能はどれですか。", options: ["AWS Certificate Manager", "ネットワーク ACL", "Amazon VPC", "セキュリティグループ"], correct: "d", explanation: "正解: D<br>本文参照:「セキュリティグループ・ネットワーク ACL (Network Access Control List)」 (p.144)<br>Dが正解です。セキュリティグループは、EC2 インスタンス等の AWS リソース単位でアタッチできるファイアウォールです。セキュリティグルー プにより、EC2 インスタンスにセキュリティルールを適用することができ ます。<br>Aは間違いです。AWS Certificate Managerは、SSL/TLSサーバ証明 書の発行と管理、配信を行うためのサービスです。<br>Bは間違いです。ネットワークACLは、サブネット単位でアタッチでき るファイアウォールです。<br>Cは間違いです。Amazon VPCは、AWS クラウドの中に、ユーザ専用 の仮想的なネットワークを構成するためのサービスです。" },
+            { q: "64. パブリッシャとサブスクライバを使用して、メッセージを送受信する AWS サービスもしくは機能はどれですか。", options: ["AWS Key Management Service", "Amazon Simple Notification Service (Amazon SNS)", "AWS DataSync", "Amazon CloudFront"], correct: "b", explanation: "正解: B<br>本文参照:「Amazon Simple Notification Service (Amazon SNS)」 (p.249)<br>Bが正解です。Amazon Simple Notification Service(以下、Amazon SNS)は、配信者から受信者に対して、メッセージ配信を行うためのマネー ジドサービスです。メッセージの配信者はAmazon SNSにメッセージを送 信することで、登録されている受信者に、非同期的にメッセージを送信する ことができます。メッセージの発行者をパブリッシャ、メッセージの受信者 をサブスクライバと呼びます。<br>Aは間違いです。AWS Key Management Serviceは、データの暗号化 に使用する暗号化キーの生成や管理を行えるサービスです。<br>Cは間違いです。AWS DataSyncは、オンプレミスのストレージから Amazon EFS、Amazon FSx、Amazon S3ヘファイルを同期するための、 あるいは AWS ストレージ間でファイルを同期するためのサービスです。<br>Dは間違いです。AWS CloudFront は、コンテンツデリバリネットワー ク (CDN)のサービスです。" },
+            { q: "65. ある総合エネルギー企業は、オンプレミスの施設を運用しています。 同社はその施設に、AWSインフラストラクチャ、AWS サービス、 API、ツールを拡張したいと考えています。オンプレミスにAWS ク ラウドを拡張し、ハイブリッドアーキテクチャをサポートするための AWS サービスはどれですか。", options: ["AWS Snowcone", "AWS Local Zones", "AWS Outposts", "AWS エッジロケーション"], correct: "c", explanation: "正解: C<br>本文参照:「AWS Outposts」 (p.63)<br>Cが正解です。AWS Outposts は、Amazon EC2 や Amazon S3 など の一部の AWSサービスを、ユーザが管理するデータセンタ内で実行する ためのサービスです。<br>Aは間違いです。AWS Snowcone を含む AWS Snow Familyは、物 理アプライアンスを用いて、ローカル環境に存在する大量のデータを、 Amazon S3 バケットヘオフライン移行するためのサービスです。<br>Bは間違いです。AWS Local Zonesとは、人口の多い場所や産業の発 達したエリアにAWSがインフラを展開している特定エリア(都市) に配 置される AWS インフラストラクチャの一種です。<br>Dは間違いです。エッジロケーションは、世界に600か所以上存在し、 地理的に分散して配置された小型のデータセンタです。AWSインフラスト ラクチャをオンプレミスに拡張することはできません。" }
+        ];
+
+        function shuffleAndRegenerate() {
+            for (let i = questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questions[i], questions[j]] = [questions[j], questions[i]];
+            }
+            document.getElementById('quiz').innerHTML = '';
+            document.getElementById('score').innerHTML = '';
+            generateQuiz();
+        }
+
+
+        function generateQuiz() {
+            const quiz = document.getElementById('quiz');
+            quiz.innerHTML = '';
+            const totalQuestions = questions.length;
+            document.querySelector('p').textContent = `全${totalQuestions}問`;
+
+            questions.forEach((q, index) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.id = `q-container-${index}`;
+
+                const header = document.createElement('div');
+                header.className = 'question-header';
+                const questionNumber = q.q.split('.')[0];
+                const questionText = q.q.substring(q.q.indexOf('.') + 1).trim();
+                header.innerHTML = `<strong>問 ${questionNumber}. ${questionText}</strong>`;
+                div.appendChild(header);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'question-options';
+                q.options.forEach((opt, i) => {
+                    const label = document.createElement('label');
+                    const input = document.createElement('input');
+                    const value = String.fromCharCode(97 + i);
+                    input.type = q.correct instanceof Array ? 'checkbox' : 'radio';
+                    input.name = `q${index}`;
+                    input.value = value;
+                    label.appendChild(input);
+
+                    const optionPrefix = String.fromCharCode(65 + i) + '. ';
+                    label.appendChild(document.createTextNode(' ' + optionPrefix + opt));
+                    label.setAttribute('data-value', value);
+                    optionsDiv.appendChild(label);
+                });
+                div.appendChild(optionsDiv);
+
+                const toggleBtn = document.createElement('button');
+                toggleBtn.textContent = '解説の表示/非表示';
+                toggleBtn.className = 'toggle-explanation-btn';
+                div.appendChild(toggleBtn);
+
+                const expl = document.createElement('div');
+                expl.className = 'explanation';
+                expl.innerHTML = `<strong>解答解説:</strong><br>${q.explanation}`;
+                div.appendChild(expl);
+
+                toggleBtn.addEventListener('click', () => {
+                    expl.classList.toggle('visible');
+                });
+
+                quiz.appendChild(div);
+            });
+        }
+
+
+        function checkAnswer(index, isGrading) {
+            const qData = questions[index];
+            const questionDiv = document.getElementById(`q-container-${index}`);
+
+            const selectedInputs = Array.from(questionDiv.querySelectorAll(`input[name="q${index}"]:checked`));
+            const selectedValues = selectedInputs.map(input => input.value);
+
+            let isCorrect;
+            const correctAnswers = Array.isArray(qData.correct) ? qData.correct : [qData.correct];
+
+            if (Array.isArray(qData.correct)) {
+                isCorrect = (selectedValues.length === qData.correct.length) &&
+                    selectedValues.sort().every((val, idx) => val === [...qData.correct].sort()[idx]);
+            } else {
+                isCorrect = (selectedValues.length === 1 && selectedValues[0] === qData.correct);
+            }
+
+            questionDiv.querySelectorAll('.question-options label').forEach(label => {
+                label.classList.remove('correct-choice', 'incorrect-choice');
+            });
+
+            if (isGrading) {
+                selectedValues.forEach(selectedValue => {
+                    const label = questionDiv.querySelector(`label[data-value="${selectedValue}"]`);
+                    if (label) {
+                        if (correctAnswers.includes(selectedValue)) {
+                            label.classList.add('correct-choice');
+                        } else {
+                            label.classList.add('incorrect-choice');
+                        }
+                    }
+                });
+
+                if (!isCorrect) {
+                    correctAnswers.forEach(correctValue => {
+                        const label = questionDiv.querySelector(`label[data-value="${correctValue}"]`);
+                        if (label && !label.classList.contains('correct-choice')) {
+                            label.classList.add('correct-choice');
+                        }
+                    });
+                }
+                questionDiv.querySelector('.explanation').classList.add('visible');
+            }
+
+            return isCorrect;
+        }
+
+        function grade() {
+            let correctCount = 0;
+            const totalQuestions = questions.length;
+
+            questions.forEach((qData, index) => {
+                if (checkAnswer(index, true)) {
+                    correctCount++;
+                }
+            });
+
+            const passMark = Math.ceil(totalQuestions * 0.90); // 正答率90%を合格ラインに設定
+            const scoreEl = document.getElementById('score');
+            const percentage = totalQuestions > 0 ? (correctCount / totalQuestions * 100).toFixed(1) : 0;
+            scoreEl.innerHTML = `あなたのスコア: ${correctCount} / ${totalQuestions}問 正解 (${percentage}%)`;
+
+            if (correctCount >= passMark) {
+                scoreEl.innerHTML += `<br><span class="result-pass">🎉 合格圏内です！おめでとうございます！</span>`;
+            } else {
+                scoreEl.innerHTML += `<br><span class="result-fail">📘 もう少し頑張りましょう！</span>`;
+            }
+        }
+
+        function showAllAnswers() {
+            questions.forEach((qData, index) => {
+                checkAnswer(index, true); // 採点時と同じロジックで正解・不正解を表示
+            });
+        }
+
+        function clearAllHighlights() {
+            document.querySelectorAll('.question-options label').forEach(label => {
+                label.classList.remove('correct-choice', 'incorrect-choice');
+            });
+            document.querySelectorAll('.explanation').forEach(el => {
+                el.classList.remove('visible');
+            });
+            document.getElementById('score').innerHTML = '';
+        }
+
+        // Initial generation of the quiz
+        generateQuiz();
+    </script>
+
+</body>
+
+</html>
