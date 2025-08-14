@@ -97,6 +97,7 @@
             border: none;
             border-radius: 5px;
             margin-top: 5px;
+            margin-bottom: 15px; /* ボタン下の余白を追加 */
         }
 
         button:hover {
@@ -126,9 +127,20 @@
 
 <body>
 
+    <div class="breadcrumb">
+        <a href="index.html">ホーム</a> &gt; <span>OCI Architect Associate 小テスト前半</span>
+    </div>
+
     <h1>OCI Architect Associate 小テスト前半</h1>
-    <h3>※解説にAI生成を用いているので、正確性に注意してね。</h3>
+    <h3>※解説にAI生成を用いているので、正確性に注意してね。合格ラインは65%以上！</h3>
     <p></p>
+
+    <div>
+        <button onclick="shuffleAndRegenerate()">問題をシャッフル</button>
+        <button onclick="grade()">採点する</button>
+        <button onclick="showAllAnswers()">すべての解説を表示</button>
+        <button onclick="clearAllHighlights()">ハイライトを消去</button>
+    </div>
 
     <div id="quiz"></div>
 
