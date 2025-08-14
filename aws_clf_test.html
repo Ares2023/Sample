@@ -74,13 +74,16 @@
             margin-right: 10px;
         }
 
+        /* --- 回答フィードバック用のスタイルを追加 --- */
         label.correct-choice {
             background-color: #e0ffe0;
+            /* 正解の選択肢の背景を薄い緑に */
             border: 1px solid green;
         }
 
         label.incorrect-choice {
             background-color: #ffe0e0;
+            /* 不正解の選択肢の背景を薄い赤に */
             border: 1px solid red;
         }
 
@@ -202,7 +205,7 @@
             { q: "61. 物理的な保護、インフラストラクチャの管理、仮想レイヤの管理等、 AWS サービスが稼働する施設に関連したセキュリティの責任を負う のは、AWSの責任共有モデルによれば、だれですか。", options: ["お客様", "AWS", "AWS とお客様の共同責任", "AWSとの契約方式による"], correct: "b", explanation: "正解: B<br>本文参照:「責任共有モデル」 (p.299)<br>Bが正解です。AWSは、AWS クラウドで提供されるすべてのサービス を実行するインフラストラクチャの保護について責任を負います。 このインフラストラクチャはハードウェア、ソフトウェア、ネットワーキ ング、AWSのサービスを実行する施設で構成されます。<br>Aは間違いです。仮想化レイヤから AWS サービスが稼働する施設の物 理的なセキュリティは、AWS 側の責任範囲であり、お客様側の責任範囲で はありません。<br>Cは間違いです。仮想化レイヤから AWS サービスが稼働する施設の物 理的なセキュリティについて、AWSのデータセンタは、非公開であるため、 お客様はアクセスすることができません。<br>Dは間違いです。AWSとの契約方式によって、責任範囲が変わるわけで はありません。" },
             { q: "62. ある行政手続き代行会社は、個人情報が混在する大量のデータを保持 しています。セキュリティチームは、データの中に個人情報や機密 データがあるかを特定する必要があります。どのAWSサービスがこ の要件を満たしますか。", options: ["Amazon Inspector", "Amazon Macie", "AWS IAM Identity Center", "Amazon CloudWatch"], correct: "b", explanation: "正解: B<br>本文参照:「Amazon Macie」 (p.213)<br>Bが正解です。Amazon Macieは、S3内の機密データの検出を行い、デー タセキュリティリスクの可視化を行えるサービスです。Amazon Macieでは、 機械学習とパターンマッチングを使用して、機密データの検出を行います。<br>Aは間違いです。Amazon Inspectorは、ソフトウェアの脆弱性がない かという観点でAWS上のリソースをスキャンする脆弱性検出のサービス です。<br>Cは間違いです。AWS IAM Identity Centerは、複数のAWSアカウ ントや SaaS へのシングルサインオンとアクセス管理を一元化するサービス です。<br>Dは間違いです。Amazon CloudWatchは、AWS リソースの性能値(メ トリクス)とログのモニタリングができるサービスです。" },
             { q: "63. ある決済サービス企業は、Amazon EC2 インスタンスでシステムを 運用しています。同社は、EC2 インスタンスのセキュリティルールを 適用する必要があります。この機能を提供する AWS サービスまたは 機能はどれですか。", options: ["AWS Certificate Manager", "ネットワーク ACL", "Amazon VPC", "セキュリティグループ"], correct: "d", explanation: "正解: D<br>本文参照:「セキュリティグループ・ネットワーク ACL (Network Access Control List)」 (p.144)<br>Dが正解です。セキュリティグループは、EC2 インスタンス等の AWS リソース単位でアタッチできるファイアウォールです。セキュリティグルー プにより、EC2 インスタンスにセキュリティルールを適用することができ ます。<br>Aは間違いです。AWS Certificate Managerは、SSL/TLSサーバ証明 書の発行と管理、配信を行うためのサービスです。<br>Bは間違いです。ネットワークACLは、サブネット単位でアタッチでき るファイアウォールです。<br>Cは間違いです。Amazon VPCは、AWS クラウドの中に、ユーザ専用 の仮想的なネットワークを構成するためのサービスです。" },
-            { q: "64. パブリッシャとサブスクライバを使用して、メッセージを送受信する AWS サービスもしくは機能はどれですか。", options: ["AWS Key Management Service", "Amazon Simple Notification Service (Amazon SNS)", "AWS DataSync", "Amazon CloudFront"], correct: "b", explanation: "正解: B<br>本文参照:「Amazon Simple Notification Service (Amazon SNS)」 (p.249)<br>Bが正解です。Amazon Simple Notification Service(以下、Amazon SNS)は、配信者から受信者に対して、メッセージ配信を行うためのマネー ジドサービスです。メッセージの配信者はAmazon SNSにメッセージを送 信することで、登録されている受信者に、非同期的にメッセージを送信する ことができます。メッセージの発行者をパブリッシャ、メッセージの受信者 をサブスクライバと呼びます。<br>Aは間違いです。AWS Key Management Serviceは、データの暗号化 に使用する暗号化キーの生成や管理を行えるサービスです。<br>Cは間違いです。AWS DataSyncは、オンプレミスのストレージから Amazon EFS、Amazon FSx、Amazon S3ヘファイルを同期するための、 あるいは AWS ストレージ間でファイルを同期するためのサービスです。<br>Dは間違いです。AWS CloudFront は、コンテンツデリバリネットワー ク (CDN)のサービスです。" },
+            { q: "64. パブリッシャとサブスクライバを使用して、メッセージを送受信する AWS サービスもしくは機能はどれですか。", options: ["AWS Key Management Service", "Amazon Simple Notification Service (Amazon SNS)", "AWS DataSync", "Amazon CloudFront"], correct: "b", explanation: "正解: B<br>本文参照:「Amazon Simple Notification Service (Amazon SNS)」 (p.249)<br>Bが正解です。Amazon Simple Notification Service(以下、Amazon SNS)は、配信者から受信者に対して、メッセージ配信を行うためのマネー ジドサービスです。メッセージの配信者はAmazon SNSにメッセージを送 信することで、登録されている受信者に、非同期的にメッセージを送信する ことができます。メッセージの発行者をパブリッシャ、メッセージの受信者 をサブスクライバと呼びます。<br>Aは間違いです。AWS Key Management Serviceは、データの暗号化 に使用する暗号化キーの生成や管理を行えるサービスです。<br>Cは間違いです。AWS DataSyncは、オンプレミスのストレージから Amazon EFS、Amazon FSx、Amazon S3ヘファイルを同期するための、 あるいは AWS ストレージ間でファイルを同期するためのサービスです。<br>Dは間違いです。Amazon CloudFront は、コンテンツデリバリネットワー ク (CDN)のサービスです。" },
             { q: "65. ある総合エネルギー企業は、オンプレミスの施設を運用しています。 同社はその施設に、AWSインフラストラクチャ、AWS サービス、 API、ツールを拡張したいと考えています。オンプレミスにAWS ク ラウドを拡張し、ハイブリッドアーキテクチャをサポートするための AWS サービスはどれですか。", options: ["AWS Snowcone", "AWS Local Zones", "AWS Outposts", "AWS エッジロケーション"], correct: "c", explanation: "正解: C<br>本文参照:「AWS Outposts」 (p.63)<br>Cが正解です。AWS Outposts は、Amazon EC2 や Amazon S3 など の一部の AWSサービスを、ユーザが管理するデータセンタ内で実行する ためのサービスです。<br>Aは間違いです。AWS Snowcone を含む AWS Snow Familyは、物 理アプライアンスを用いて、ローカル環境に存在する大量のデータを、 Amazon S3 バケットヘオフライン移行するためのサービスです。<br>Bは間違いです。AWS Local Zonesとは、人口の多い場所や産業の発 達したエリアにAWSがインフラを展開している特定エリア(都市) に配 置される AWS インフラストラクチャの一種です。<br>Dは間違いです。エッジロケーションは、世界に600か所以上存在し、 地理的に分散して配置された小型のデータセンタです。AWSインフラスト ラクチャをオンプレミスに拡張することはできません。" }
         ];
 
@@ -230,9 +233,8 @@
 
                 const header = document.createElement('div');
                 header.className = 'question-header';
-                const questionNumber = q.q.split('.')[0];
-                const questionText = q.q.substring(q.q.indexOf('.') + 1).trim();
-                header.innerHTML = `<strong>問 ${questionNumber}. ${questionText}</strong>`;
+                // 統一された問題番号の表示ロジック
+                header.innerHTML = `<strong>問 ${index + 1}. ${q.q.substring(q.q.indexOf('.') + 1)}</strong>`;
                 div.appendChild(header);
 
                 const optionsDiv = document.createElement('div');
@@ -260,7 +262,8 @@
 
                 const expl = document.createElement('div');
                 expl.className = 'explanation';
-                expl.innerHTML = `<strong>解答解説:</strong><br>${q.explanation}`;
+                // 統一された解説の表示ロジック
+                expl.innerHTML = `<strong>解答解説:</strong> ${q.explanation}`;
                 div.appendChild(expl);
 
                 toggleBtn.addEventListener('click', () => {
@@ -328,13 +331,15 @@
                     correctCount++;
                 }
             });
-
-            const passMark = Math.ceil(totalQuestions * 0.90); // 正答率90%を合格ラインに設定
+            
+            // OCIテストと合格基準を統一
+            const passMark = Math.ceil(totalQuestions * 0.65);
             const scoreEl = document.getElementById('score');
-            const percentage = totalQuestions > 0 ? (correctCount / totalQuestions * 100).toFixed(1) : 0;
-            scoreEl.innerHTML = `あなたのスコア: ${correctCount} / ${totalQuestions}問 正解 (${percentage}%)`;
+            scoreEl.innerHTML = `あなたのスコア: ${correctCount} / ${totalQuestions}問 正解`;
 
-            if (correctCount >= passMark) {
+            if (correctCount === totalQuestions) {
+                scoreEl.innerHTML += `<br><span class="result-pass">🎉 満点です！素晴らしい！</span>`;
+            } else if (correctCount >= passMark) {
                 scoreEl.innerHTML += `<br><span class="result-pass">🎉 合格圏内です！おめでとうございます！</span>`;
             } else {
                 scoreEl.innerHTML += `<br><span class="result-fail">📘 もう少し頑張りましょう！</span>`;
@@ -343,7 +348,7 @@
 
         function showAllAnswers() {
             questions.forEach((qData, index) => {
-                checkAnswer(index, true); // 採点時と同じロジックで正解・不正解を表示
+                checkAnswer(index, true); 
             });
         }
 
@@ -357,7 +362,6 @@
             document.getElementById('score').innerHTML = '';
         }
 
-        // Initial generation of the quiz
         generateQuiz();
     </script>
 
