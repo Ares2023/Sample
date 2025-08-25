@@ -129,7 +129,7 @@
         <a href="index.html">世良サイト</a> &gt; <span>AWS認定ソリューションアーキテクト - アソシエイト模擬試験 (PDF版)</span>
     </div>
     <h1>AWS認定ソリューションアーキテクト - アソシエイト 試験問題サンプル (PDF版)</h1>
-    <h3>※このページはAWS提供の試験問題サンプルをそのまま持ってきたものです。</h3>
+    <h3>※このページはAWS提供の試験問題サンプルをそのまま持ってきたものです。<br>合格点は７割以上！頑張ろう！！</h3>
     <p></p>
     <button onclick="shuffleAndRegenerate()">問題をシャッフル</button>
     <button onclick="grade()">採点する</button>
@@ -387,7 +387,7 @@
             const scoreEl = document.getElementById('score');
             scoreEl.innerHTML = `あなたのスコア: ${correctCount} / ${totalQuestions}問 正解 (${percentage.toFixed(1)}%)`;
 
-            if (percentage >= 70) { // 70%を合格ラインの目安とします
+            if (percentage >= 72) { // 70%を合格ラインの目安とします
                 scoreEl.innerHTML += `<br><span class="result-pass">🎉 合格おめでとうございます！</span>`;
             } else {
                 scoreEl.innerHTML += `<br><span class="result-fail">📘 あと少し！頑張りましょう！</span>`;
