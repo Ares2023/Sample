@@ -356,7 +356,8 @@
                 });
 
                 // ユーザーが選択した不正解の選択肢をハイライト
-                selectedValues.forEach(selectedValue => {
+                selectedInputs.forEach(input => {
+                    const selectedValue = input.value;
                     if (!correctAnswers.includes(selectedValue)) {
                         const incorrectLabel = questionDiv.querySelector(`label[data-value="${selectedValue}"]`);
                         if (incorrectLabel) {
@@ -387,7 +388,7 @@
             const scoreEl = document.getElementById('score');
             scoreEl.innerHTML = `あなたのスコア: ${correctCount} / ${totalQuestions}問 正解 (${percentage.toFixed(1)}%)`;
 
-            if (percentage >= 72) { // 70%を合格ラインの目安とします
+            if (percentage >= 70) { // 70%を合格ラインの目安とします
                 scoreEl.innerHTML += `<br><span class="result-pass">🎉 合格おめでとうございます！</span>`;
             } else {
                 scoreEl.innerHTML += `<br><span class="result-fail">📘 あと少し！頑張りましょう！</span>`;
@@ -419,4 +420,3 @@
 </body>
 
 </html>
-```
