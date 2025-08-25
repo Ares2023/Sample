@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AWS認定ソリューションアーキテクト - アソシエイト模擬試験 (PDF版)</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 1em;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .summary {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        .explanation {
+            display: none;
+            padding-top: 10px;
+            border-top: 1px dashed #eee;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .explanation.visible {
+            display: block;
+        }
+
+        .question-header {
+            margin-bottom: 10px;
+        }
+
+        .question-options label {
+            display: block;
+            margin-bottom: 5px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .question-options input[type="radio"],
+        .question-options input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        /* --- 回答フィードバック用のスタイルを追加 --- */
+        label.correct-choice {
+            background-color: #e0ffe0;
+            /* 正解の選択肢の背景を薄い緑に */
+            border: 1px solid green;
+        }
+
+        label.incorrect-choice {
+            background-color: #ffe0e0;
+            /* 不正解の選択肢の背景を薄い赤に */
+            border: 1px solid red;
+        }
+
+
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .toggle-explanation-btn {
+            background-color: #6c757d;
+            padding: 5px 12px;
+            font-size: 0.8em;
+            margin-top: 10px;
+        }
+
+        .toggle-explanation-btn:hover {
+            background-color: #5a6268;
+        }
+
+        .result-pass {
+            color: green;
+        }
+
+        .result-fail {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="breadcrumb">
+        <a href="index.html">世良サイト</a> &gt; <span>AWS認定ソリューションアーキテクト - アソシエイト模擬試験 (PDF版)</span>
+    </div>
+    <h1>AWS認定ソリューションアーキテクト - アソシエイト 試験問題サンプル (PDF版)</h1>
+    <h3>※このページはAWS提供の試験問題サンプルをそのまま持ってきたものです。</h3>
+    <p></p>
+    <button onclick="shuffleAndRegenerate()">問題をシャッフル</button>
+    <button onclick="grade()">採点する</button>
+    <button onclick="showAllAnswers()">すべての解説を表示</button>
+    <button onclick="clearAllHighlights()">ハイライトを消去</button>
+    <p></p>
+    <div id="quiz"></div>
+
+    <button onclick="shuffleAndRegenerate()">問題をシャッフル</button>
+    <button onclick="grade()">採点する</button>
+    <button onclick="showAllAnswers()">すべての解説を表示</button>
+    <button onclick="clearAllHighlights()">ハイライトを消去</button>
+
+
+    <h2 id="score" class="summary"></h2>
+
+    <script>
+        const questions = [
+            {
+                q: "1) ある企業は、複数のアベイラビリティーゾーンにまたがる VPC 内で、パブリック側の3層ウェブアプリケーションを実行しています。プライベートサブネットで実行されているアプリケーション層の Amazon EC2 インスタンスでは、インターネットからソフトウェアパッチをダウンロードする必要があります。ただし、EC2 インスタンスにインターネットから直接アクセスすることはできません。EC2 インスタンスが必要なパッチをダウンロードできるようにするために実行すべきアクションはどれですか。(2つ選択)",
+                options: [
+                    "パブリックサブネットで NAT ゲートウェイを構成する。",
+                    "インターネットトラフィック用の NAT ゲートウェイへのルートがあるカスタムルートテーブルを定義し、アプリケーション層のプライベートサブネットに関連付ける。",
+                    "Elastic IP アドレスを EC2 インスタンスに割り当てる。",
+                    "インターネットトラフィック用のインターネットゲートウェイへのルートがあるカスタムルートテーブルを定義し、アプリケーション層のプライベートサブネットに関連付ける。",
+                    "プライベートサブネットでNAT インスタンスを設定する。"
+                ],
+                correct: ["a", "b"],
+                explanation: "正解: A、B<br>NAT ゲートウェイは、プライベートサブネット内の EC2 インスタンスからインターネットや他の AWS のサービスにトラフィックを転送し、その応答をインスタンスに送り返します。NATゲートウェイを作成した後、プライベートサブネットのルートテーブルを更新して、インターネットトラフィックを NAT ゲートウェイに向ける必要があります。"
+            },
+            {
+                q: "2) あるソリューションアーキテクトは、会社が2週間一時休業する間に実行する必要のない Amazon EC2 インスタンスのコストを節約するため、ソリューションを設計したいと考えています。EC2 インスタンスで実行されているアプリケーションは、インスタンスが動作を再開するときに必要なデータをインスタンスメモリに格納します。EC2 インスタンスをシャットダウンして再開するために、ソリューションアーキテクトが推奨すべきアプローチはどれですか。",
+                options: [
+                    "インスタンスストアボリュームにデータを格納するようにアプリケーションを変更する。ボリュームを再起動中に、再接続する。",
+                    "EC2 インスタンスを停止する前に、インスタンスのスナップショットを作成する。インスタンスの再起動後に、スナップショットを復元する。",
+                    "休止状態が有効になっている EC2 インスタンスでアプリケーションを実行する。会社が2週間の一時休業に入る前に、インスタンスを休止状態にする。",
+                    "EC2 インスタンスを停止する前に、各インスタンスのアベイラビリティーゾーンをメモしておく。2週間の一時休業が終わったら、同じアベイラビリティーゾーンでインスタンスを再起動する。"
+                ],
+                correct: "c",
+                explanation: "正解: C<br>- EC2 インスタンスを休止状態にすることで、インスタンスメモリの内容が Amazon Elastic Block Store (Amazon EBS) ルートボリュームに保存されます。インスタンスが再起動すると、インスタンスメモリの内容が再ロードされます。"
+            },
+            {
+                q: "3) ある企業は、VPCにおいて、Amazon EC2 インスタンスでモニタリングアプリケーションを実行する予定です。EC2 インスタンスへの接続は、そのプライベート IPv4 アドレスを使用して行われます。ソリューションアーキテクトは、アプリケーションに障害が発生して到達不能になった場合に、トラフィックをスタンバイ EC2 インスタンスに迅速に誘導できるソリューションを設計する必要があります。これらの要件を満たすアプローチはどれですか。",
+                options: [
+                    "プライベート トIPアドレスのリスナーで構成された Application Load Balancer をデプロイし、ロードバランサーにプライマリ EC2 インスタンスを登録する。障害発生時に、インスタンスを登録解除して、スタンバイ EC2 インスタンスを登録する。",
+                    "カスタム DHCP オプションセットを構成する。プライマリ EC2 インスタンスで障害が発生したときに、同じプライベート IP アドレスをスタンバイ EC2 インスタンスに割り当てるように DHCP を設定する。",
+                    "プライベート IP アドレスで設定された EC2 インスタンスに、セカンダリ Elastic Network Interface を添付する。プライマリ EC2 インスタンスが到達不能になった場合は、ネットワークインターフェイスをスタンバイ EC2 インスタンスに移動する。",
+                    "Elastic IP アドレスをプライマリ EC2 インスタンスのネットワークインターフェイスに関連付ける。障害発生時に Elastic IP とプライマリインスタンスの関連付けを解除し、スタンバイ EC2 インスタンスに関連付ける。"
+                ],
+                correct: "c",
+                explanation: "正解: C<br>セカンダリ Elastic Network Interface を EC2 インスタンスに追加できます。プライマリネットワークインターフェイスをインスタンスからデタッチすることはできませんが、セカンダリネットワークインターフェイスをデタッチして別の EC2 インスタンスに添付することはできます。"
+            },
+            {
+                q: "4) ある分析会社は、ユーザーにウェブ解析サービスを提供する予定です。このサービスでは、ユーザーのウェブページに、同社の Amazon S3 パケットに対して認証済み GET リクエストを行う JavaScript スクリプトが含まれている必要があります。スクリプトを正常に実行するため、ソリューションアーキテクトが行うべきことは何ですか。",
+                options: [
+                    "S3 バケットでクロスオリジンリソース共有 (CORS) を有効にする。",
+                    "S3 バケットで S3 バージョニングを有効にする。",
+                    "ユーザーにスクリプトの署名付き URL を提供する。",
+                    "パブリック実行権限を許可するよう、S3バケットポリシーを設定する。"
+                ],
+                correct: "a",
+                explanation: "正解: A<br>ウェブブラウザが、Web ページと異なるドメイン名を持つサーバーから作成されたスクリプトの実行をブロックします。Amazon S3をCORS で設定し、スクリプトの実行を許可する HTTP ヘッダーを送信できます。"
+            },
+            {
+                q: "5) ある企業のセキュリティチームは、クラウドに保存されているすべてのデータを、オンプレミスに保存された暗号化キーを使用して、保管時は常に暗号化する必要があります。これらの要件を満たす暗号化オプションはどれですか。(2つ選択)",
+                options: [
+                    "Amazon S3 で管理された暗号キー (SSE-S3) でサーバー側の暗号化を使用する。",
+                    "AWS KMS で管理された暗号化キー (SSE-KMS) でサーバー側の暗号化を使用する。",
+                    "顧客提供の暗号化キー (SSE-C) でサーバー側の暗号化を使用する。",
+                    "クライアント側の暗号化を使用して、保存時の暗号化を行う。",
+                    "Amazon S3 イベントによって呼び出される AWS Lambda 関数を使用し、顧客のキーを使用してデータを暗号化する。"
+                ],
+                correct: ["c", "d"],
+                explanation: "正解: C、D<br>顧客が提供するキー (SSE-C) を使用したサーバー側の暗号化を使用すると、Amazon S3 は PUT リクエストで提供される暗号化キーを使用してオブジェクトサーバー側を暗号化できます。Amazon S3 がオブジェクトを復号化するには、GETリクエストでも同じキーを指定する必要があります。顧客には、Amazon S3 にアップロードする前にクライアント側でデータを暗号化するオプションもあり、この場合、ダウンロードしてからデータを復号化できます。AWS ソフトウェア開発キット (SDKs) は、プロセスを合理化する S3 暗号化クライアントを提供します。"
+            },
+            {
+                q: "6) ある企業は、データ処理ワークロードを実行するために、Amazon EC2 リザーブドインスタンスを使用しています。毎夜のジョブは通常、実行に7時間かかり、10時間以内に終了する必要があります。同社は、毎月末に需要が一時的に増加するため、現在のリソースの容量では、ジョブが制限時間以内に終わらないと予想しています。いったん開始された処理ジョブは完了するまで中断できません。同社は、できる限りコスト効率よくリソース容量を提供できるソリューションを実装したいと考えています。これを達成するために、ソリューションアーキテクトは何をすべきでしょうか。",
+                options: [
+                    "需要が高まる期間中にオンデマンドインスタンスをデプロイする。",
+                    "追加のインスタンス用に2つ目の日 予約を作成する。",
+                    "需要が高まる期間中にスポットインスタンスをデプロイする。",
+                    "ワークロードの増加をサポートするために、EC2予約のEC2 インスタンスのサイズを増やす。"
+                ],
+                correct: "a",
+                explanation: "正解: A<br>スポットインスタンスは最もコストのかからないオプションですが、中断できないジョブや一定期間内に完了しなければならないジョブには適していません。オンデマンドインスタンスでは、実行秒数に対して請求が行われます。"
+            },
+            {
+                q: "7) ある企業は、毎週生放送されるテレビ番組のオンライン投票システムを運用しています。放送中、Auto Scaling グループで実行される Amazon EC2 インスタンスのフロントエンドフリートに、ユーザーから数十万という票が送られてきます。EC2 インスタンスは Amazon RDS データベースに票を書き込みます。しかし、データベースは EC2 インスタンスからのリクエストに迅速に対応することができません。ソリューションアーキテクトは、最も効率的な方法で、ダウンタイムなしに を処理するソリューションを設計する必要があります。これらの要件を満たすのはどのソリューションですか。",
+                options: [
+                    "フロントエンドアプリケーションを AWS Lambda に移行する。Amazon API Gateway を使用して、ユーザーリクエストを Lambda 関数にルートする。",
+                    "データベースをマルチ AZ 配置に変換することで、データベースを水平方向にスケールする。プライマリとセカンダリの両方のDB インスタンスに書き込むよう、フロントエンドアプリケーションを設定する。",
+                    "Amazon Simple Queue Service (Amazon SQS) キューに票を送信するよう、フロントエンドアプリケーションを設定する。SQS キューを読み取り、投票情報をデータベースに書き込むよう、ワーカーインスタンスをプロビジョニングする。",
+                    "Amazon EventBridge (Amazon CloudWatch Events) を使用してスケジュールされたイベントを作成し、投票期間中、大規模なメモリ最適化インスタンスでデータベースを再プロビジョニングする。投票が終了したら、サイズの小さいインスタンスを使用するよう、データベースを再プロビジョニングする。"
+                ],
+                correct: "c",
+                explanation: "正解: C<br>票の取り込みをデータベースから切り離し、投票システムがデータベースへの書き込みを待たずに投票の処理を継続できるようにします。SQS キューから読み取る専用ワーカーを追加し、制御可能な速度で票をデータベースに入力できるようにします。票はデータベースが処理可能な速度でデータベースに追加されますが、票が失われることはありません。"
+            },
+            {
+                q: "8) ある企業には、パブリックサブネットとプライベートサブネットで実行される2層アプリケーションアーキテクチャがあります。ウェブアプリケーションを実行している Amazon EC2 インスタンスはパブリックサブネットにあり、データベースの EC2 インスタンスはプライベートサブネットで実行されています。ウェブアプリケーションインスタンスとデータベースは単一のアベイラビリティーゾーン (AZ) で実行されています。このアーキテクチャで高可用性を実現するために、ソリューションアーキテクトが取るべきステップの組み合わせはどれですか。(2つ選択)",
+                options: [
+                    "新しいパブリックサブネットとプライベートサブネットを同一の AZ に作成する。",
+                    "複数の AZ にまたがる Amazon EC2 Auto Scaling グループと Application Load Balancer をウェブアプリケーションインスタンス用に作成する。",
+                    "既存のウェブアプリケーションインスタンスを Application Load Balancer の背後にある Auto Scaling グループに追加する。",
+                    "新しいパブリックサブネットとプライベートサブネットを新しい AZ に作成する。新しいAZにあるパブリックサブネットに EC2 インスタンスを使用してデータベースを作成する。古いデータベースの内容を新しいデータベースに移行する。",
+                    "新しいパブリックサブネットとプライベートサブネットを同一のVPC内の、それぞれ新しい AZ に作成する。Amazon RDS マルチ AZ DB インスタンスをプライベートサブネットに作成する。古いデータベースの内容を新しい DB インスタンスに移行する。"
+                ],
+                correct: ["b", "e"],
+                explanation: "正解: B、E<br>新しいサブネットを新しいアベイラビリティーゾーン (AZ) に作成し、冗長ネットワークを実現します。ロードバランサーの背後にある2つの AZ にインスタンスの Auto Scaling グループを作成し、ウェブアプリケーションの高可用性を確保し、2つのパブリック AZ 間でウェブトラフィックを再分散させます。2つのプライベートサブネットに RDS DB インスタンスを作成し、データベース層の高可用性も実現します。"
+            },
+            {
+                q: "9) ある Web サイトでは、毎日正午に大量のトラフィックを受信するカスタムウェブアプリケーションが実行されています。ユーザーは毎日新しい写真やコンテンツをアップロードしていますが、タイムアウトについて苦情を寄せています。このアーキテクチャでは Amazon EC2 Auto Scaling グループが使用され、起動時にアプリケーションが起動してからユーザーのリクエストに応答するまでに1分かかります。変化するトラフィックに的確に対応するために、ソリューションアーキテクトはアーキテクチャをどのように再設計すべきでしょうか。",
+                options: [
+                    "Network Load Balancer をスロースタートに設定する。",
+                    "Amazon ElastiCache for Redis を設定し、EC2 インスタンスからの直接リクエストをオフロードする。",
+                    "EC2 インスタンスのウォームアップ条件で Auto Scaling ステップスケーリングポリシーを設定する。",
+                    "Application Load Balancer をオリジンとして使用するよう、Amazon CloudFront を設定する。"
+                ],
+                correct: "c",
+                explanation: "正解: C<br>現在の設定では、新しい EC2 インスタンスはトランザクションに応答する前に稼働状態になります。これにより、インスタンスの規模が過度に拡大される可能性もあります。ステップスケーリングポリシーでは、新しく起動されたインスタンスのウォームアップにかかる秒数を指定できます。その指定されたウォームアップ期間が終了するまで、EC2 インスタンスは Auto Scaling グループの集合メトリクスの対象になりません。スケールアウト中、Auto Scaling ロジックは、ウォームアップ中の EC2 インスタンスを、Auto Scaling グループの現在の容量の一部と見なしません。したがって、ステップ調整値の同じ範囲に入るアラーム超過が複数発生した場合でも、規模の拡大や縮小は一度だけとなります。これにより、必要以上のインスタンスが追加されることがなくなります。"
+            },
+            {
+                q: "10) AWS で実行されているあるアプリケーションは、そのデータベースに Amazon Aurora マルチ AZ DB クラスターデプロイメントを使用します。あるソリューションアーキテクトが、パフォーマンスメトリクスを評価したところ、データベースの読み取りによって 1/0 が高くなり、データベースに対する書き込み要求のレイテンシーが増大していることを発見しました。ソリューションアーキテクトは、読み取り要求と書き込み要求を分けるために何をすべきですか。",
+                options: [
+                    "Aurora データベースでリードスルーキャッシュを有効にする。",
+                    "マルチ AZ スタンバイインスタンスから読み取るよう、アプリケーションを更新する。",
+                    "Aurora レプリカを作成し、適切なエンドポイントを使用するようにアプリケーションを変更する。",
+                    "2つ目の Aurora データベースを作成し、リードレプリカとしてプライマリデータベースにリンクする。"
+                ],
+                correct: "c",
+                explanation: "正解: C<br>Aurora レプリカは、読み取りトラフィックをオフロードする方法を提供します。Aurora レプリカはメインデータベースと同じ基本ストレージを共有するため、通常、遅延は非常に短くなります。Aurora レプリカには独自のエンドポイントがあるため、読み取りトラフィックを新しいエンドポイントに送信するようアプリケーションを設定する必要があります。"
+            }
+        ];
+
+        function shuffleAndRegenerate() {
+            for (let i = questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questions[i], questions[j]] = [questions[j], questions[i]];
+            }
+            document.getElementById('quiz').innerHTML = '';
+            document.getElementById('score').innerHTML = '';
+            generateQuiz();
+        }
+
+        function generateQuiz() {
+            const quiz = document.getElementById('quiz');
+            quiz.innerHTML = '';
+            const totalQuestions = questions.length;
+            document.querySelector('p').textContent = `全${totalQuestions}問`;
+
+            questions.forEach((q, index) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.id = `q-container-${index}`;
+
+                const header = document.createElement('div');
+                header.className = 'question-header';
+                header.innerHTML = `<strong>問 ${index + 1}. ${q.q}</strong>`;
+                div.appendChild(header);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'question-options';
+                q.options.forEach((opt, i) => {
+                    const label = document.createElement('label');
+                    const input = document.createElement('input');
+                    const value = String.fromCharCode(97 + i);
+                    input.type = q.correct instanceof Array ? 'checkbox' : 'radio';
+                    input.name = `q${index}`;
+                    input.value = value;
+                    label.appendChild(input);
+
+                    const optionPrefix = String.fromCharCode(65 + i) + ') ';
+                    label.appendChild(document.createTextNode(' ' + optionPrefix + opt));
+                    label.setAttribute('data-value', value);
+                    optionsDiv.appendChild(label);
+                });
+                div.appendChild(optionsDiv);
+
+                const toggleBtn = document.createElement('button');
+                toggleBtn.textContent = '解説の表示/非表示';
+                toggleBtn.className = 'toggle-explanation-btn';
+                div.appendChild(toggleBtn);
+
+                const expl = document.createElement('div');
+                expl.className = 'explanation';
+                expl.innerHTML = `<strong>解答解説:</strong><br>${q.explanation}`;
+                div.appendChild(expl);
+
+                toggleBtn.addEventListener('click', () => {
+                    expl.classList.toggle('visible');
+                });
+
+                quiz.appendChild(div);
+            });
+        }
+
+        function checkAnswer(index, isGrading) {
+            const qData = questions[index];
+            const questionDiv = document.getElementById(`q-container-${index}`);
+
+            const selectedInputs = Array.from(questionDiv.querySelectorAll(`input[name="q${index}"]:checked`));
+            const selectedValues = selectedInputs.map(input => input.value);
+
+            let isCorrect;
+            const correctAnswers = Array.isArray(qData.correct) ? qData.correct : [qData.correct];
+
+            if (Array.isArray(qData.correct)) {
+                isCorrect = (selectedValues.length === qData.correct.length) &&
+                    selectedValues.sort().every((val, idx) => val === [...qData.correct].sort()[idx]);
+            } else {
+                isCorrect = (selectedValues.length === 1 && selectedValues[0] === qData.correct);
+            }
+
+            questionDiv.querySelectorAll('.question-options label').forEach(label => {
+                label.classList.remove('correct-choice', 'incorrect-choice');
+            });
+
+            if (isGrading) {
+                correctAnswers.forEach(correctValue => {
+                    const correctLabel = questionDiv.querySelector(`label[data-value="${correctValue}"]`);
+                    if (correctLabel) {
+                        correctLabel.classList.add('correct-choice');
+                    }
+                });
+
+                selectedValues.forEach(selectedValue => {
+                    if (!correctAnswers.includes(selectedValue)) {
+                        const incorrectLabel = questionDiv.querySelector(`label[data-value="${selectedValue}"]`);
+                        if (incorrectLabel) {
+                            incorrectLabel.classList.add('incorrect-choice');
+                        }
+                    }
+                });
+
+                questionDiv.querySelector('.explanation').classList.add('visible');
+            }
+
+            return isCorrect;
+        }
+
+        function grade() {
+            let correctCount = 0;
+            const totalQuestions = questions.length;
+
+            questions.forEach((qData, index) => {
+                if (checkAnswer(index, false)) {
+                     correctCount++;
+                }
+            });
+
+            showAllAnswers();
+
+            const percentage = (correctCount / totalQuestions) * 100;
+            const scoreEl = document.getElementById('score');
+            scoreEl.innerHTML = `あなたのスコア: ${correctCount} / ${totalQuestions}問 正解 (${percentage.toFixed(1)}%)`;
+
+            if (percentage >= 70) { // 70%を合格ラインの目安とします
+                scoreEl.innerHTML += `<br><span class="result-pass">🎉 合格おめでとうございます！</span>`;
+            } else {
+                scoreEl.innerHTML += `<br><span class="result-fail">📘 あと少し！頑張りましょう！</span>`;
+            }
+        }
+
+        function showAllAnswers() {
+            questions.forEach((qData, index) => {
+                checkAnswer(index, true);
+            });
+        }
+
+        function clearAllHighlights() {
+            document.querySelectorAll('.question-options label').forEach(label => {
+                label.classList.remove('correct-choice', 'incorrect-choice');
+            });
+            document.querySelectorAll('.explanation').forEach(el => {
+                el.classList.remove('visible');
+            });
+            document.getElementById('score').innerHTML = '';
+        }
+
+        window.onload = function() {
+            generateQuiz();
+        };
+
+    </script>
+
+</body>
+
+</html>
