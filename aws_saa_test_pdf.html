@@ -1,3 +1,17 @@
+ご依頼いただいた内容に基づき、`aws_saa_test_pdf.html` のJavaScriptコードを修正し、`aws_saa_test (1).html` のように、採点時に正解と不正解の選択肢に色が付くように変更します。
+
+変更の主なポイントは以下の通りです。
+
+1.  **`checkAnswer`関数の機能拡張**: 選択された回答が正解か不正解かを判定するだけでなく、`isGrading`フラグが`true`の場合に、正しい選択肢には緑色の枠を、間違った選択肢には赤色の枠を付けるようにします。
+2.  **`grade`関数の修正**: `grade()`関数内で、ユーザーの回答を判定した後、`showAllAnswers()`を呼び出して全問の正解・不正解をハイライト表示するようにします。
+3.  **`showAllAnswers`関数の実装**: `showAllAnswers()`関数は、`checkAnswer()`関数を`isGrading`フラグを`true`にして呼び出すことで、すべての問題の選択肢をハイライトし、解説を表示するようにします。
+4.  **`clearAllHighlights`関数の実装**: ユーザーが「ハイライトを消去」ボタンを押した際に、色と解説を消すための関数を追加します。
+
+-----
+
+### **修正後の`aws_saa_test_pdf.html`のコード**
+
+```html
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -347,6 +361,7 @@
             });
 
             if (isGrading) {
+                // 正解の選択肢をハイライト
                 correctAnswers.forEach(correctValue => {
                     const correctLabel = questionDiv.querySelector(`label[data-value="${correctValue}"]`);
                     if (correctLabel) {
@@ -354,6 +369,7 @@
                     }
                 });
 
+                // ユーザーが選択した不正解の選択肢をハイライト
                 selectedValues.forEach(selectedValue => {
                     if (!correctAnswers.includes(selectedValue)) {
                         const incorrectLabel = questionDiv.querySelector(`label[data-value="${selectedValue}"]`);
@@ -362,7 +378,7 @@
                         }
                     }
                 });
-
+                
                 questionDiv.querySelector('.explanation').classList.add('visible');
             }
 
@@ -417,3 +433,4 @@
 </body>
 
 </html>
+```
