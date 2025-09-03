@@ -281,7 +281,7 @@
             });
             
             const scoreEl = document.getElementById('score');
-            const passMark = Math.ceil(totalQuestions * 0.65);
+            const passMark = Math.ceil(totalQuestions * 0.72);
             scoreEl.innerHTML = `あなたのスコア: ${correctCount} / ${totalQuestions}問 正解`;
             if (correctCount >= passMark) {
                 scoreEl.innerHTML += `<br><span class="result-pass">🎉 合格圏内です！おめでとうございます！</span>`;
