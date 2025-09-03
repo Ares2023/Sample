@@ -2,368 +2,96 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>AWS認定 Developer - Associate (DVA-C02) 模擬試験</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>世良サイト</title>
     <style>
         body {
-            font-family: sans-serif;
-            padding: 20px;
-            line-height: 1.6;
-        }
-        .breadcrumb {
-            margin-bottom: 20px;
-            font-size: 1em;
-            color: #666;
-        }
-        .breadcrumb a {
-            text-decoration: none;
-            color: #007bff;
-        }
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-        .breadcrumb span {
-            font-weight: bold;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
             color: #333;
+            text-align: center;
+            padding-top: 50px;
         }
-        .question {
-            margin-bottom: 30px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+        h1 {
+            color: #007acc;
         }
-        .summary {
-            font-weight: bold;
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #007acc;
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+        a {
+            text-decoration: none;
+            color: #005a9c;
             font-size: 1.2em;
-            margin-top: 20px;
         }
-        .explanation {
-            padding-top: 10px;
-            border-top: 1px dashed #eee;
-            margin-top: 10px;
-            font-size: 0.9em;
-        }
-        .question-header {
-            margin-bottom: 10px;
-        }
-        .question-options label {
-            display: block;
-            margin-bottom: 5px;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .question-options input[type="radio"],
-        .question-options input[type="checkbox"] {
-            margin-right: 10px;
-        }
-        label.correct-choice {
-            background-color: #e0ffe0;
-            border: 1px solid green;
-        }
-        label.incorrect-choice {
-            background-color: #ffe0e0;
-            border: 1px solid red;
-        }
-        button {
-            padding: 10px 20px;
-            margin-right: 10px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .toggle-explanation-btn {
-            background-color: #6c757d;
-            padding: 5px 12px;
-            font-size: 0.8em;
-            margin-top: 10px;
-        }
-        .toggle-explanation-btn:hover {
-            background-color: #5a6268;
-        }
-        .result-pass {
-            color: green;
-        }
-        .result-fail {
-            color: red;
-        }
-        .correct-answer-text {
-            color: green;
-            font-weight: bold;
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <div class="breadcrumb">
-        <a href="index.html">世良サイト</a> &gt; <span>AWS認定 Developer - Associate (DVA-C02) 模擬試験</span>
-    </div>
+    <h1>世良のGitHub Pagesへようこそ！</h1>
+    <p>以下から学習したい内容を選択してください：</p>
 
-    <h1>AWS認定 Developer - Associate (DVA-C02) 模擬試験</h1>
-    <p></p>
+    <h2>AWS 認定試験</h2>
+    <ul>
+        <li><a href="aws_clf_test.html">AWS認定 Cloud Practitioner 模擬試験（Exam Press版）をスタート(65)</a></li>
+        <li><a href="aws_saa_test.html">AWS認定 SAA模擬試験（インプレス版）をスタート(65)</a></li>
+        <li><a href="aws_dva_test_pdf_ja.html">AWS認定 Developer - Associate 模擬試験 (AWS公式版・日本語) をスタート(10)</a></li>
+        <li><a href="aws_dva_test_pdf.html">AWS認定 Developer - Associate 模擬試験 (AWS公式版・英語) をスタート(10)</a></li>
+        <li><a href="aws_saa_test_pdf.html">AWS認定 SAA模擬試験 (AWS公式版) をスタート(10)</a></li>
+    </ul>
 
-    <div>
-        <button onclick="grade()">採点する</button>
-        <button onclick="showAllAnswers()">すべての解答と解説を表示</button>
-        <button onclick="clearAllHighlights()">リセット</button>
-    </div>
+    <h2>OCI 認定試験</h2>
+    <ul>
+        <li><a href="test1.html">OCI Architect Associate 小テスト前半をスタート(113)</a></li>
+        <li><a href="test2.html">OCI Architect Associate 小テスト後半をスタート(70)</a></li>
+    </ul>
 
-    <div id="quiz"></div>
-
-    <button onclick="grade()">採点する</button>
-    <button onclick="showAllAnswers()">すべての解答と解説を表示</button>
-    <button onclick="clearAllHighlights()">リセット</button>
-
-    <h2 id="score" class="summary"></h2>
+    <h2>その他</h2>
+    <ul>
+        <li><a href="#" onclick="showRandomQuotes()">名言</a></li>
+    </ul>
 
     <script>
-        const questions = [
-            {
-                q: "1) ある企業がレガシーアプリケーションをAmazon EC2インスタンスに移行しています。このアプリケーションは、ソースコードに保存されたユーザー名とパスワードを使ってMySQLデータベースに接続します。企業はデータベースをAmazon RDS for MySQL DBインスタンスに移行する予定です。移行の一環として、データベースの認証情報を安全に保存し、自動的にローテーションする仕組みを実装する必要があります。これらの要件を満たすソリューションはどれですか？",
-                options: [
-                    "A) データベースの認証情報をAmazon Machine Image (AMI)の環境変数に保存します。認証情報はAMIを置き換えることでローテーションします。",
-                    "B) データベースの認証情報をAWS Systems Manager Parameter Storeに保存します。Parameter Storeが認証情報を自動的にローテーションするように設定します。",
-                    "C) データベースの認証情報をEC2インスタンスの環境変数に保存します。認証情報はEC2インスタンスを再起動することでローテーションします。",
-                    "D) データベースの認証情報をAWS Secrets Managerに保存します。Secrets Managerが認証情報を自動的にローテーションするように設定します。"
-                ],
-                correct: "D",
-                [cite_start]explanation: "AWS Secrets Managerは、データベース、アプリケーション、サービス、およびその他のITリソースにアクセスするために必要な認証情報を保護するのに役立ちます [cite: 140][cite_start]。Secrets Managerを使用すると、データベースの認証情報、APIキー、その他のシークレットをライフサイクル全体にわたってローテーション、管理、および取得できます [cite: 141][cite_start]。ユーザーとアプリケーションは、Secrets Manager APIを呼び出すことでシークレットを取得し、機密情報をプレーンテキストでハードコーディングする必要がなくなります [cite: 142][cite_start]。Secrets Managerは、Amazon RDS、Amazon Redshift、およびAmazon DocumentDBとの統合により、シークレットのローテーションを提供します [cite: 143]。"
-            },
-            {
-                q: "2) 開発者が、ユーザーがコメントを投稿し、ほぼリアルタイムでフィードバックを受け取ることができるウェブアプリケーションを作成しています。これらの要件を満たすソリューションはどれですか？（2つ選択）",
-                options: [
-                    "A) AWS AppSyncスキーマと対応するAPIを作成します。データストアとしてAmazon DynamoDBテーブルを使用します。",
-                    "B) Amazon API GatewayでWebSocket APIを作成します。バックエンドとしてAWS Lambda関数を使用し、データストアとしてAmazon DynamoDBテーブルを使用します。",
-                    "C) Amazon RDSデータベースをバックエンドとするAWS Elastic Beanstalkアプリケーションを作成します。アプリケーションが長期間持続するTCP/IPソケットを許可するように設定します。",
-                    "D) Amazon API GatewayでGraphQLエンドポイントを作成します。データストアとしてAmazon DynamoDBテーブルを使用します。",
-                    "E) Amazon CloudFrontへのWebSocket接続を確立します。CloudFrontディストリビューションのオリジンとしてAWS Lambda関数を使用し、データストアとしてAmazon Aurora DBクラスターを使用します。"
-                ],
-                correct: ["A", "B"],
-                [cite_start]explanation: "AWS AppSyncは、1つ以上のデータソースからデータを安全にアクセス、操作、および結合するための柔軟なAPIを作成する機能を提供することで、アプリケーション開発を簡素化します [cite: 144][cite_start]。AWS AppSyncは、GraphQLを使用してアプリケーションが必要なデータを正確に取得できるようにするマネージドサービスです [cite: 145][cite_start]。Amazon DynamoDBを含むさまざまなデータソースでリアルタイムの更新を必要とするスケーラブルなアプリケーションを構築するためにAWS AppSyncを使用できます [cite: 146][cite_start]。Amazon API Gatewayでは、AWSサービス（AWS LambdaやDynamoDBなど）またはHTTPエンドポイントのステートフルなフロントエンドとしてWebSocket APIを作成できます [cite: 147][cite_start]。WebSocket APIは、クライアントアプリケーションから受信したメッセージの内容に基づいてバックエンドを呼び出します [cite: 148][cite_start]。リクエストを受信して応答するREST APIとは異なり、WebSocket APIはクライアントアプリケーションとバックエンド間の双方向通信をサポートします [cite: 149]。"
-            },
-            {
-                q: "3) 開発者がアプリケーションにサインアップとサインイン機能を追加しています。アプリケーションは、ユーザーのサインインイベントをログに記録するために、カスタム分析ソリューションへのAPIコールを実行する必要があります。これらの要件を満たすために、開発者はどのようなアクションを組み合わせるべきですか？（2つ選択）",
-                options: [
-                    "A) サインアップとサインイン機能を提供するためにAmazon Cognitoを使用します。",
-                    "B) サインアップとサインイン機能を提供するためにAWS Identity and Access Management (IAM)を使用します。",
-                    "C) ユーザーが認証されたときにAPIコールを実行するように、AWS Configルールを設定します。",
-                    "D) ユーザーが認証されたときにAPIコールを実行するために、Amazon API Gatewayメソッドを呼び出します。",
-                    "E) ユーザーが認証されたときにAPIコールを実行するために、AWS Lambda関数を呼び出します。"
-                ],
-                correct: ["A", "E"],
-                [cite_start]explanation: "Amazon Cognitoは、ウェブおよびモバイルアプリケーションにユーザーのサインアップ、サインイン、およびアクセスコントロールを追加します [cite: 150][cite_start]。また、カスタム分析ソリューションへのAPIコールを行うAWS Lambda関数を作成し、Amazon Cognitoのポスト認証トリガーを使用してその関数を呼び出すことができます [cite: 151]。"
-            },
-            {
-                q: "4) ある企業がAWSアカウントでREST APIにAmazon API Gatewayを使用しています。開発者は、別のAWSアカウントのIAMユーザーのみがAPIにアクセスできるようにしたいと考えています。これらの要件を満たすために、開発者はどのようなステップを組み合わせるべきですか？（2つ選択）",
-                options: [
-                    "A) IAM許可ポリシーを作成します。そのポリシーを各IAMユーザーにアタッチします。APIのメソッド認証タイプをAWS_IAMに設定します。APIリクエストにSignature Version 4を使用して署名します。",
-                    "B) Amazon Cognitoユーザープールを作成します。各IAMユーザーをユーザープールに追加します。APIのメソッド認証タイプをCOGNITO_USER_POOLSに設定します。Amazon CognitoでIAM認証情報を使用して認証します。リクエストヘッダーにIDトークンを追加します。",
-                    "C) Amazon Cognitoアイデンティティプールを作成します。各IAMユーザーをアイデンティティプールに追加します。APIのメソッド認証タイプをCOGNITO_USER_POOLSに設定します。Amazon CognitoでIAM認証情報を使用して認証します。リクエストヘッダーにアクセストークンを追加します。",
-                    "D) 各IAMユーザーのみにアクセスを許可するAPIのリソースポリシーを作成します。",
-                    "E) 各IAMユーザーのみにアクセスを許可するAPIのAmazon Cognitoオーソライザーを作成します。APIのメソッド認証タイプをCOGNITO_USER_POOLSに設定します。"
-                ],
-                correct: ["A", "D"],
-                [cite_start]explanation: "リソースポリシーは、Signature Version 4（SigV4）プロトコルを使用して、あるAWSアカウントのユーザーに別のAWSアカウントのAPIアクセスを許可することができます [cite: 152]。この設定により、別のAWSアカウントのIAMユーザーがAPI Gatewayリソースにアクセスできます。"
-            },
-            {
-                q: "5) 開発者が、テキストファイルを.pdfファイルに変換する新しいアプリケーションを構築しています。別のアプリケーションがソースのAmazon S3バケットにテキストファイルを書き込みます。新しいアプリケーションは、Amazon S3にファイルが到着したらそれを読み取り、AWS Lambda関数を使用してファイルを.pdfファイルに変換する必要があります。開発者は、Amazon S3とAmazon CloudWatch Logsへのアクセスを許可するIAMポリシーを作成しました。Lambda関数が正しい権限を持つようにするために、開発者は何をすべきですか？",
-                options: [
-                    "A) AWS Identity and Access Management (IAM)を使用してLambda実行ロールを作成します。そのIAMポリシーをロールにアタッチします。Lambda実行ロールをLambda関数に割り当てます。",
-                    "B) AWS Identity and Access Management (IAM)を使用してLambda実行ユーザーを作成します。そのIAMポリシーをユーザーにアタッチします。Lambda実行ユーザーをLambda関数に割り当てます。",
-                    "C) AWS Identity and Access Management (IAM)を使用してLambda実行ロールを作成します。そのIAMポリシーをロールにアタッチします。IAMロールをLambda関数の環境変数として保存します。",
-                    "D) AWS Identity and Access Management (IAM)を使用してLambda実行ユーザーを作成します。そのIAMポリシーをユーザーにアタッチします。IAMユーザー認証情報をLambda関数の環境変数として保存します。"
-                ],
-                correct: "A",
-                [cite_start]explanation: "AWS Lambda関数の実行ロールは、Lambda関数にAWSサービスとリソースにアクセスする権限を付与します [cite: 153][cite_start]。このロールは関数を作成するときに提供し、関数が呼び出されるとLambdaはそのロールを引き受けます [cite: 154]。"
-            },
-            {
-                q: "6) 開発者がデータベースに非常に機密性の高いデータを保存するアプリケーションに取り組んでいます。開発者は、データを保護するためにエンベロープ暗号化を使用してAWS Key Management Service (AWS KMS)を使用する必要があります。この要件を満たすために、開発者はデータをどのように暗号化して設定すべきですか？",
-                options: [
-                    "A) KMSキーを使用してデータを暗号化します。暗号化されたデータをデータベースに保存します。",
-                    "B) 生成されたデータキーを使用してデータを暗号化します。暗号化されたデータをデータベースに保存します。",
-                    "C) 生成されたデータキーを使用してデータを暗号化します。暗号化されたデータとデータキーIDをデータベースに保存します。",
-                    "D) 生成されたデータキーを使用してデータを暗号化します。暗号化されたデータと暗号化されたデータキーをデータベースに保存します。"
-                ],
-                correct: "D",
-                [cite_start]explanation: "エンベロープ暗号化は、データキーでプレーンテキストデータを暗号化し、次に別のキーでデータキーを暗号化する手法です [cite: 155][cite_start]。データベース内の暗号化されたデータを復号化するためにデータキーを使用できるように、データキーの暗号化された形式を保存する必要があります [cite: 156]。"
-            },
-            {
-                q: "7) 開発者が既存のレコードストレージアプリケーションにAmazon ElastiCache for Memcachedを追加しています。一般的なレコード処理パターンを分析した結果、開発者は**レイジーローディング**を使用することにしました。どの擬似コードの例がレイジーローディングを正しく実装していますか？",
-                options: [
-                    "A) record_value ← db.query(\"UPDATE Records SET Details (1) WHERE ID == {0}\", record key, record value) cache.set (record key, record_value)",
-                    "B) record_value ← cache.get(record_key) if (record value == NULL) record_value ← db.query(\"SELECT Details FROM Records WHERE ID == {0}\", record key) cache.set (record key, record value)",
-                    "C) record_value ← cache.get (record_key) db.query(\"UPDATE Records SET Details = (1) WHERE ID == {0}\", record key, record_value)",
-                    "D) record value ← db.query(\"SELECT Details FROM Records WHERE $ID==\\{0\\}\", record key) if (record value ! NULL) cache.set (record key, record value)"
-                ],
-                correct: "B",
-                [cite_start]explanation: "レイジーローディングは、レコードが必要になるまでロードされないキャッシング戦略です [cite: 157][cite_start]。レイジーローディングを実装する場合、アプリケーションは最初にキャッシュでレコードをチェックします [cite: 158][cite_start]。レコードが存在しない場合、アプリケーションはデータベースからレコードを取得し、キャッシュに保存します [cite: 159]。"
-            },
-            {
-                q: "8) 開発者がAmazon API Gatewayを使用する新しいウェブアプリケーションを構築しています。開発者は、開発（dev）用と本番（prod）用のワークロードで異なる環境を維持したいと考えています。APIのバックエンドは、dev用とprod用の2つのエイリアスを持つAWS Lambda関数になります。最小限の設定でこれらの環境を維持するには、どうすればよいですか？",
-                options: [
-                    "A) 環境ごとに1つのREST APIを作成します。APIを対応するLambda関数のdevおよびprodエイリアスと統合します。APIをそれぞれのステージにデプロイします。ステージURLを使用してAPIにアクセスします。",
-                    "B) 1つのREST APIを作成します。エイリアスの代わりにステージ変数を使用してAPIをLambda関数と統合します。APIをdevとprodの2つの異なるステージにデプロイします。各ステージで、異なるエイリアスを値とするステージ変数を作成します。異なるステージURLを使用してAPIにアクセスします。",
-                    "C) 1つのREST APIを作成します。APIをLambda関数のdevエイリアスと統合します。APIをdev環境にデプロイします。prod環境に対して、カナリアリリースデプロイメントを設定し、カナリアがLambdaのprodエイリアスと統合するようにします。",
-                    "D) 1つのREST APIを作成します。APIをLambda関数のprodエイリアスと統合します。APIをprod環境にデプロイします。dev環境に対して、カナリアリリースデプロイメントを設定し、カナリアがLambdaのdevエイリアスと統合するようにします。"
-                ],
-                correct: "B",
-                [cite_start]explanation: "Amazon API Gatewayのデプロイステージを使用すると、各APIに対して複数のリリースステージを管理できます [cite: 160][cite_start]。ステージ変数を設定することで、APIデプロイステージが異なるバックエンドエンドポイントとやり取りできます [cite: 161][cite_start]。API Gatewayのステージ変数を使用して、複数のバージョンとエイリアスを持つ単一のAWS Lambda関数を参照できます [cite: 162]。"
-            },
-            {
-                q: "9) 開発者が、Amazon EC2インスタンスのフリート上で実行されるアプリケーションのパフォーマンスを追跡したいと考えています。開発者は、フリート全体の平均リクエストレイテンシーや最大リクエストレイテンシーなどの統計情報を表示し、追跡したいと考えています。平均応答時間がしきい値を超えた場合に、即座に通知を受け取りたいと考えています。これらの要件を満たすソリューションはどれですか？",
-                options: [
-                    "A) 各EC2インスタンスでcronジョブを設定し、応答時間を測定して、1分ごとにAmazon S3バケットに保存されたログファイルを更新します。Amazon S3イベント通知を使用して、ログファイルを読み取り、新しいエントリをAmazon OpenSearch Serviceクラスターに書き込むAWS Lambda関数を呼び出します。OpenSearch Dashboardsで結果を可視化します。OpenSearch Serviceが応答時間がしきい値を超えたときにAmazon Simple Notification Service (Amazon SNS)トピックにアラートを送信するように設定します。",
-                    "B) アプリケーションが応答時間をシステムログに書き込むように設定します。EC2インスタンスにAmazon Inspectorエージェントをインストールして設定し、継続的にログを読み取り、応答時間をAmazon EventBridge (Amazon CloudWatch Events)に送信します。EventBridge (CloudWatch Events)コンソールでメトリクスグラフを表示します。EventBridge (CloudWatch Events)カスタムルールを設定して、応答時間メトリクスの平均がしきい値を超えたときにAmazon Simple Notification Service (Amazon SNS)通知を送信するようにします。",
-                    "C) アプリケーションが応答時間をログファイルに書き込むように設定します。EC2インスタンスにAmazon CloudWatchエージェントをインストールして設定し、アプリケーションログをCloudWatch Logsにストリームします。ログから応答時間のメトリクスフィルターを作成します。CloudWatchコンソールでメトリクスグラフを表示します。CloudWatchアラームを作成して、応答時間メトリクスの平均がしきい値を超えたときにAmazon Simple Notification Service (Amazon SNS)通知を送信するようにします。",
-                    "D) EC2インスタンスにAWS Systems Manager Agent (SSM Agent)をインストールして設定し、応答時間を監視し、カスタムメトリクスとしてAmazon CloudWatchに送信します。Amazon QuickSightでメトリクスグラフを表示します。CloudWatchアラームを作成して、応答時間メトリクスの平均がしきい値を超えたときにAmazon Simple Notification Service (Amazon SNS)通知を送信するようにします。"
-                ],
-                correct: "C",
-                [cite_start]explanation: "Amazon CloudWatchエージェントを設定して、ログとメトリクスをCloudWatchにストリームできます [cite: 163][cite_start]。また、CloudWatch Logsに保存されているログからメトリクスフィルターを作成することもできます [cite: 164]。"
-            },
-            {
-                q: "10) 開発者がアプリケーションをローカルでテストし、AWS Lambda関数にデプロイしました。デプロイパッケージのサイズ制限を超えないように、開発者はデプロイファイルに依存関係を含めませんでした。開発者がリモートでアプリケーションをテストすると、依存関係が不足しているためLambda関数が実行されません。この問題を解決するソリューションはどれですか？",
-                options: [
-                    "A) Lambdaコンソールエディタを使用してコードを更新し、不足している依存関係を含めます。",
-                    "B) 不足している依存関係を含む追加の.zipファイルを作成します。その.zipファイルを元のLambdaデプロイパッケージに含めます。",
-                    "C) Lambda関数の環境変数に不足している依存関係への参照を追加します。",
-                    "D) 不足している依存関係を含むレイヤーを作成します。そのレイヤーをLambda関数にアタッチします。"
-                ],
-                correct: "D",
-                [cite_start]explanation: "AWS Lambda関数は、レイヤーの形で追加のコードやコンテンツを取り込むように設定できます [cite: 165][cite_start]。レイヤーは、ライブラリ、カスタムランタイム、またはその他の依存関係を含む.zipファイルのアーカイブです [cite: 166][cite_start]。レイヤーを使用すると、ライブラリをデプロイパッケージに含めることなくLambda関数でライブラリを使用できます [cite: 167]。"
-            }
+        const quotes = [
+            "明日死ぬかのように生きよ。永遠に生きるかのように学べ。 - マハトマ・ガンディー",
+            "為せば成る、為さねば成らぬ何事も。成らぬは人の為さぬなりけり。 - 上杉鷹山",
+            "人生とは、今日一日を精一杯生きることから始まる。 - ヘレン・ケラー",
+            "成功の秘訣は、あきらめないことだ。 - アルベルト・アインシュタイン",
+            "失敗は成功の母。 - ことわざ",
+            "一歩一歩が成功への道。 - 孫正義",
+            "夢なき者に理想なし、理想なき者に計画なし、計画なき者に実行なし、実行なき者に成功なし。故に、夢なき者に成功なし。 - 吉田松陰"
         ];
 
-        function grade() {
-            let correctCount = 0;
-            const totalQuestions = questions.length;
-            questions.forEach((qData, index) => {
-                const questionDiv = document.getElementById(`q-container-${index}`);
-                const selectedInputs = Array.from(questionDiv.querySelectorAll(`input[name="q${index}"]:checked`));
-                const selectedValues = selectedInputs.map(input => input.value);
-                
-                let isCorrect;
-                const correctAnswers = Array.isArray(qData.correct) ? qData.correct : [qData.correct];
+        function showRandomQuotes() {
+            const selectedQuotes = [];
+            const tempQuotes = [...quotes];
 
-                if (Array.isArray(qData.correct)) {
-                    isCorrect = (selectedValues.length === qData.correct.length) &&
-                        selectedValues.sort().every((val, idx) => val === [...qData.correct].sort()[idx]);
-                } else {
-                    isCorrect = (selectedValues.length === 1 && selectedValues[0] === qData.correct);
+            for (let i = 0; i < 3; i++) {
+                if (tempQuotes.length === 0) {
+                    break;
                 }
-
-                if (isCorrect) {
-                    correctCount++;
-                }
-
-                questionDiv.querySelectorAll('.question-options label').forEach(label => {
-                    label.classList.remove('correct-choice', 'incorrect-choice');
-                    const value = label.getAttribute('data-value');
-                    if (selectedValues.includes(value)) {
-                        if (correctAnswers.includes(value)) {
-                            label.classList.add('correct-choice');
-                        } else {
-                            label.classList.add('incorrect-choice');
-                        }
-                    } else if (!isCorrect && correctAnswers.includes(value)) {
-                        label.classList.add('correct-choice');
-                    }
-                });
-
-                questionDiv.querySelector('.explanation').style.display = 'block';
-            });
-            
-            const scoreEl = document.getElementById('score');
-            const passMark = Math.ceil(totalQuestions * 0.65);
-            scoreEl.innerHTML = `あなたのスコア: ${correctCount} / ${totalQuestions}問 正解`;
-            if (correctCount >= passMark) {
-                scoreEl.innerHTML += `<br><span class="result-pass">🎉 合格圏内です！おめでとうございます！</span>`;
-            } else {
-                scoreEl.innerHTML += `<br><span class="result-fail">📘 もう少し頑張りましょう！</span>`;
+                const randomIndex = Math.floor(Math.random() * tempQuotes.length);
+                selectedQuotes.push(tempQuotes[randomIndex]);
+                tempQuotes.splice(randomIndex, 1);
             }
+
+            const message = selectedQuotes.join("\n\n");
+            alert("今日の名言\n\n" + message);
         }
-
-        function showAllAnswers() {
-            questions.forEach((qData, index) => {
-                const questionDiv = document.getElementById(`q-container-${index}`);
-                questionDiv.querySelectorAll('.question-options label').forEach(label => {
-                    label.classList.remove('correct-choice', 'incorrect-choice');
-                });
-                
-                const correctAnswers = Array.isArray(qData.correct) ? qData.correct : [qData.correct];
-                correctAnswers.forEach(correctValue => {
-                    const label = questionDiv.querySelector(`label[data-value="${correctValue}"]`);
-                    if (label) {
-                        label.classList.add('correct-choice');
-                    }
-                });
-
-                questionDiv.querySelector('.explanation').style.display = 'block';
-            });
-        }
-
-        function clearAllHighlights() {
-            document.querySelectorAll('.question-options label').forEach(label => {
-                label.classList.remove('correct-choice', 'incorrect-choice');
-            });
-            document.querySelectorAll('.explanation').forEach(el => {
-                el.style.display = 'none';
-            });
-            document.getElementById('score').innerHTML = '';
-            document.querySelectorAll('input').forEach(input => input.checked = false);
-        }
-
-        function generateQuiz() {
-            const quiz = document.getElementById('quiz');
-            quiz.innerHTML = '';
-            const totalQuestions = questions.length;
-            document.querySelector('p').textContent = `全${totalQuestions}問`;
-
-            questions.forEach((q, index) => {
-                const div = document.createElement('div');
-                div.className = 'question';
-                div.id = `q-container-${index}`;
-
-                const header = document.createElement('div');
-                header.className = 'question-header';
-                const questionText = q.q.replace(/^\d+\)\s*/, '');
-                header.innerHTML = `<strong>問 ${index + 1}. ${questionText}</strong>`;
-                div.appendChild(header);
-
-                const optionsDiv = document.createElement('div');
-                optionsDiv.className = 'question-options';
-                q.options.forEach((opt, i) => {
-                    const label = document.createElement('label');
-                    const input = document.createElement('input');
-                    const value = String.fromCharCode(65 + i);
-                    input.type = q.correct instanceof Array ? 'checkbox' : 'radio';
-                    input.name = `q${index}`;
-                    input.value = value;
-                    label.appendChild(input);
-                    label.appendChild(document.createTextNode(' ' + opt));
-                    label.setAttribute('data-value', value);
-                    optionsDiv.appendChild(label);
-                });
-                div.appendChild(optionsDiv);
-
-                const expl = document.createElement('div');
-                expl.className = 'explanation';
-                const correctOptions = Array.isArray(q.correct) ? q.correct.join(', ') : q.correct;
-                expl.innerHTML = `<strong>正解:</strong> <span class="correct-answer-text">${correctOptions}</span><br><strong>解答解説:</strong> ${q.explanation}`;
-                expl.style.display = 'none';
-                div.appendChild(expl);
-
-                quiz.appendChild(div);
-            });
-        }
-
-        generateQuiz();
     </script>
+
 </body>
 </html>
