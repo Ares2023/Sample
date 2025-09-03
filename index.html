@@ -1,109 +1,110 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>世良サイト</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
-            text-align: center;
-            padding-top: 50px;
-        }
-        h1 {
-            color: #007acc;
-        }
-        h2 {
-            color: #333;
-            border-bottom: 2px solid #007acc;
-            display: inline-block;
-            padding-bottom: 5px;
-            margin-top: 40px;
-        }
-        h3 {
-            color: #555;
-            margin-top: 25px;
-            border-left: 3px solid #007acc;
-            padding-left: 10px;
-            display: inline-block;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin: 10px 0;
-        }
-        a {
-            text-decoration: none;
-            color: #005a9c;
-            font-size: 1.2em;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>資格別学習ページ</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      text-align: center;
+      color: #007acc;
+      margin: 30px 0;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
+    }
+    .card h2 {
+      color: #007acc;
+      margin-bottom: 15px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 10px 0;
+    }
+    a {
+      display: inline-block;
+      text-decoration: none;
+      background: #007acc;
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+    a:hover {
+      background: #005fa3;
+    }
+  </style>
 </head>
 <body>
-
-    <h1>世良のGitHub Pagesへようこそ！</h1>
-    <p>以下から学習したい内容を選択してください：</p>
-
-    <h2>AWS 認定試験</h2><br>
-    <h3>Cloud Practitioner</h3>
-    <ul>
-        <li><a href="aws_clf_test.html">AWS認定 CLF 模擬試験（Exam Press版）をスタート(65)</a></li>
-    </ul>
-    <h3>Associate</h3>
-    <ul>
-        <li><a href="aws_saa_test.html">AWS認定 SAA 模擬試験（インプレス版）をスタート(65)</a></li>
-        <li><a href="aws_saa_test_pdf.html">AWS認定 SAA 模擬試験 (AWS公式版) をスタート(10)</a></li>
-        <li><a href="aws_dva_test_pdf.html">AWS認定 DVA 模擬試験 (AWS公式版) をスタート(10)</a></li>
-    </ul>
-
-    <h2>OCI 認定試験</h2>
-    <h3>Architect Associate</h3>
-    <ul>
-        <li><a href="test1.html">OCI Architect Associate 小テスト前半をスタート(113)</a></li>
-        <li><a href="test2.html">OCI Architect Associate 小テスト後半をスタート(70)</a></li>
-    </ul>
-
-    <h2>その他</h2>
-    <ul>
+  <h1>資格別 学習リンク集</h1>
+  <div class="container">
+    <div class="card">
+      <h2>AWS 認定試験</h2>
+      <ul>
+        <li><a href="aws_clf_test.html">CLF 模擬試験 (65)</a></li>
+        <li><a href="aws_saa_test.html">SAA 模擬試験 (65)</a></li>
+        <li><a href="aws_saa_test_pdf.html">SAA 模擬試験 AWS公式 (10)</a></li>
+        <li><a href="aws_dva_test_pdf.html">DVA 模擬試験 AWS公式 (10)</a></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>OCI 認定試験</h2>
+      <ul>
+        <li><a href="test1.html">Architect Associate 前半 (113)</a></li>
+        <li><a href="test2.html">Architect Associate 後半 (70)</a></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>その他</h2>
+      <ul>
         <li><a href="#" onclick="showRandomQuotes()">名言</a></li>
-    </ul>
+      </ul>
+    </div>
+  </div>
 
-    <script>
-        const quotes = [
-            "明日死ぬかのように生きよ。永遠に生きるかのように学べ。 - マハトマ・ガンディー",
-            "為せば成る、為さねば成らぬ何事も。成らぬは人の為さぬなりけり。 - 上杉鷹山",
-            "人生とは、今日一日を精一杯生きることから始まる。 - ヘレン・ケラー",
-            "成功の秘訣は、あきらめないことだ。 - アルベルト・アインシュタイン",
-            "失敗は成功の母。 - ことわざ",
-            "一歩一歩が成功への道。 - 孫正義",
-            "夢なき者に理想なし、理想なき者に計画なし、計画なき者に実行なし、実行なき者に成功なし。故に、夢なき者に成功なし。 - 吉田松陰"
-        ];
-
-        function showRandomQuotes() {
-            const selectedQuotes = [];
-            const tempQuotes = [...quotes];
-
-            for (let i = 0; i < 3; i++) {
-                if (tempQuotes.length === 0) {
-                    break;
-                }
-                const randomIndex = Math.floor(Math.random() * tempQuotes.length);
-                selectedQuotes.push(tempQuotes[randomIndex]);
-                tempQuotes.splice(randomIndex, 1);
-            }
-
-            const message = selectedQuotes.join("\n\n");
-            alert("今日の名言\n\n" + message);
-        }
-    </script>
-
+  <script>
+    const quotes = [
+      "明日死ぬかのように生きよ。永遠に生きるかのように学べ。 - マハトマ・ガンディー",
+      "為せば成る、為さねば成らぬ何事も。 - 上杉鷹山",
+      "人生とは、今日一日を精一杯生きることから始まる。 - ヘレン・ケラー",
+      "成功の秘訣は、あきらめないことだ。 - アルベルト・アインシュタイン",
+      "失敗は成功の母。 - ことわざ",
+      "一歩一歩が成功への道。 - 孫正義",
+      "夢なき者に成功なし。 - 吉田松陰"
+    ];
+    function showRandomQuotes() {
+      const selectedQuotes = [];
+      const tempQuotes = [...quotes];
+      for (let i = 0; i < 3; i++) {
+        if (tempQuotes.length === 0) break;
+        const randomIndex = Math.floor(Math.random() * tempQuotes.length);
+        selectedQuotes.push(tempQuotes[randomIndex]);
+        tempQuotes.splice(randomIndex, 1);
+      }
+      alert("今日の名言\n\n" + selectedQuotes.join("\n\n"));
+    }
+  </script>
 </body>
 </html>
-
