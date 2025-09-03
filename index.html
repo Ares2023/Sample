@@ -1,14 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>世良サイト　資格別学習ページ</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f8f9fa, #e3f2fd);
       color: #333;
       margin: 0;
       padding: 0;
@@ -17,6 +17,7 @@
       text-align: center;
       color: #007acc;
       margin: 30px 0;
+      font-size: 2rem;
     }
     .container {
       display: grid;
@@ -32,11 +33,24 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       padding: 20px;
       text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
     }
     .card h2 {
-      color: #007acc;
       margin-bottom: 15px;
+      font-size: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
     }
+    .card.aws h2 { color: #007acc; }
+    .card.oci h2 { color: #ff6f00; }
+    .card.other h2 { color: #388e3c; }
+
     .sub-category {
       margin-top: 10px;
       margin-bottom: 10px;
@@ -59,43 +73,49 @@
       color: #fff;
       padding: 10px 15px;
       border-radius: 6px;
-      transition: 0.3s;
+      transition: background 0.3s, transform 0.2s;
     }
     a:hover {
       background: #005fa3;
+      transform: scale(1.05);
     }
+    .aws a { background: #007acc; }
+    .oci a { background: #ff6f00; }
+    .oci a:hover { background: #e65100; }
+    .other a { background: #388e3c; }
+    .other a:hover { background: #2e7d32; }
   </style>
 </head>
 <body>
-  <h1>世良サイト　資格別学習リンク集</h1>
+  <h1><i class="fas fa-graduation-cap"></i> 世良サイト 資格別学習リンク集</h1>
   <div class="container">
-    <div class="card">
-      <h2>AWS 認定試験</h2>
+    <div class="card aws">
+      <h2><i class="fas fa-cloud"></i> AWS 認定試験</h2>
       <div class="sub-category">Foundation</div>
       <ul>
-        <li><a href="aws_clf_test.html">CLF 模擬試験 (65)</a></li>
+        <li><a href="aws_clf_test.html"><i class="fas fa-seedling"></i> CLF 模擬試験 (65)</a></li>
       </ul>
       <div class="sub-category">Solutions Architect Associate</div>
       <ul>
-        <li><a href="aws_saa_test.html">SAA 模擬試験 (65)</a></li>
-        <li><a href="aws_saa_test_pdf.html">SAA 模擬試験 AWS公式 (10)</a></li>
+        <li><a href="aws_saa_test.html"><i class="fas fa-cubes"></i> SAA 模擬試験 (65)</a></li>
+        <li><a href="aws_saa_test_pdf.html"><i class="fas fa-book"></i> SAA 模擬試験 AWS公式 (10)</a></li>
       </ul>
       <div class="sub-category">Developer Associate</div>
       <ul>
-        <li><a href="aws_dva_test_pdf.html">DVA 模擬試験 AWS公式 (10)</a></li>
+        <li><a href="aws_dva_test_pdf.html"><i class="fas fa-code"></i> DVA 模擬試験 AWS公式 (10)</a></li>
       </ul>
     </div>
-    <div class="card">
-      <h2>OCI 認定試験</h2>
+    <div class="card oci">
+      <h2><i class="fas fa-database"></i> OCI 認定試験</h2>
       <ul>
-        <li><a href="test1.html">Architect Associate 前半 (113)</a></li>
-        <li><a href="test2.html">Architect Associate 後半 (70)</a></li>
+        <li><a href="test1.html"><i class="fas fa-file-alt"></i> Architect Associate 前半 (113)</a></li>
+        <li><a href="test2.html"><i class="fas fa-file-alt"></i> Architect Associate 後半 (70)</a></li>
       </ul>
     </div>
-    <div class="card">
-      <h2>その他</h2>
+    <div class="card other">
+      <h2><i class="fas fa-lightbulb"></i> その他</h2>
       <ul>
-        <li><a href="#" onclick="showRandomQuotes()">名言</a></li>
+        <li><a href="#" onclick="showRandomQuotes()"><i class="fas fa-quote-right"></i> 名言</a></li>
       </ul>
     </div>
   </div>
@@ -119,10 +139,8 @@
         selectedQuotes.push(tempQuotes[randomIndex]);
         tempQuotes.splice(randomIndex, 1);
       }
-      alert("今日の名言\n\n" + selectedQuotes.join("\n\n"));
+      alert("今日の名言\\n\\n" + selectedQuotes.join("\\n\\n"));
     }
   </script>
 </body>
 </html>
-
-
